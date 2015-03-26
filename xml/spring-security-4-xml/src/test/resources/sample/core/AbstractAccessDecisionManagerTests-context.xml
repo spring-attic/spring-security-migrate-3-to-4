@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+
+	<b:bean class="org.springframework.security.access.vote.AffirmativeBased">
+		<b:constructor-arg ref="voters"/>
+	</b:bean>
+
+	<b:bean class="org.springframework.security.access.vote.ConsensusBased">
+		<b:constructor-arg ref="voters"/>
+	</b:bean>
+
+	<b:bean class="org.springframework.security.access.vote.UnanimousBased">
+		<b:constructor-arg ref="voters"/>
+	</b:bean>
+
+	<util:list id="voters">
+		<b:bean class="org.springframework.security.access.vote.RoleVoter"/>
+	</util:list>
+</b:beans>

@@ -1,0 +1,6 @@
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.2'
+}
+apply from: ASCIIDOC_GRADLE
+
+tasks.findByPath("artifactoryPublish")?.enabled = false

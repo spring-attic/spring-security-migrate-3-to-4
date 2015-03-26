@@ -1,0 +1,6 @@
+rootProject.name = 'spring-security-migrate-3-to-4'
+
+include ':xml:spring-security-4-xml'
+include ':xml:spring-security-3-xml'
+include ':jc:spring-security-4-jc'
+include ':jc:spring-security-3-jc'

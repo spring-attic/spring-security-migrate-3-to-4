@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<!-- Example with parent, providers, clearExtraInformation properties -->
+	<b:bean class="org.springframework.security.authentication.ProviderManager">
+		<b:property name="parent" ref="parent"/>
+		<b:property name="providers">
+			<b:list>
+				<b:ref bean="authenticationProvider"/>
+			</b:list>
+		</b:property>
+		<b:property name="clearExtraInformation" value="true"/>
+	</b:bean>
+
+	<b:bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<b:property name="userDetailsService" ref="userDetailsService"/>
+	</b:bean>
+
+	<user-service id="userDetailsService">
+		<user name="child" password="password" authorities="ROLE_USER" />
+	</user-service>
+
+	<authentication-manager id="parent">
+		<authentication-provider>
+			<user-service>
+				<user name="parent" password="password" authorities="ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</b:beans>

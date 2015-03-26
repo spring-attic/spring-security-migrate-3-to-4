@@ -1,0 +1,45 @@
+apply plugin: 'eclipse-wtp'
+apply plugin: 'war'
+apply plugin: 'maven'
+
+tasks.findByPath("artifactoryPublish")?.enabled = false
+
+description = """sample"""
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+ext.springSecurityVersion = '4.0.0.RELEASE'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile "org.springframework:spring-context:$springVersion"
+	compile "org.springframework:spring-webmvc:$springVersion"
+	compile "org.springframework.security:spring-security-core:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-web:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-ldap:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-taglibs:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-acl:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+	compile "org.aspectj:aspectjrt:1.6.9"
+	compile "org.slf4j:slf4j-api:1.7.10"
+	compile "ch.qos.logback:logback-core:1.1.2"
+	compile "javax.inject:javax.inject:1"
+	compile "javax.servlet:jstl:1.2"
+	compile "org.springframework:spring-test:$springVersion"
+	compile "org.easytesting:fest-assert:1.4"
+	runtime "org.slf4j:jcl-over-slf4j:1.7.10"
+	runtime "org.slf4j:log4j-over-slf4j:1.7.10"
+	testCompile "org.springframework.security:spring-security-openid:$springSecurityVersion"
+	testCompile "org.springframework.security:spring-security-cas:$springSecurityVersion"
+	testCompile "org.mockito:mockito-core:1.9.5"
+	testCompile "net.sf.ehcache:ehcache:2.9.0"
+	testCompile "javax.annotation:jsr250-api:1.0"
+	testCompile "junit:junit:4.10"
+	testCompile "org.springframework:spring-test:$springVersion"
+	providedCompile "javax.servlet:javax.servlet-api:3.0.1"
+	providedCompile "javax.servlet.jsp:jsp-api:2.1"
+}

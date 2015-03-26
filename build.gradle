@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+group = 'org.springframework.security.migrate'
+
+ext.ASCIIDOC_GRADLE = "$rootDir/gradle/asciidoc.gradle"
+
+ext.springVersion = '4.1.6.RELEASE'
+
+task docsZip(type: Zip) {
+	baseName = rootProject.name
+	classifier = 'docs'
+	duplicatesStrategy = 'EXCLUDE'
+	from { [project(':xml'), project(':jc')]*.tasks*.asciidoctor*.outputs }
+	into 'migrate'
+}
+
+tasks.build.dependsOn docsZip
+
+configurations.archives.artifacts.clear()
+
+artifacts {
+	archives docsZip
+}

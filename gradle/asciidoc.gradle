@@ -1,0 +1,21 @@
+apply plugin: 'java'
+
+asciidoctor {
+        options = [
+          eruby: 'erubis'
+        ]
+        attributes copycss : '',
+            icons : 'font',
+            'source-highlighter': 'prettify',
+            sectanchors : '',
+            toc: 'left',
+            idprefix: '',
+            idseparator: '-',
+            doctype: 'book',
+            numbered: '',
+
+            'spring-security-docs-url' : 'http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#',
+            'spring-security-migration-github-url' : 'https://github.com/spring-projects/spring-security-migrate-3-to-4/'
+    }
+
+tasks.build.dependsOn asciidoctor

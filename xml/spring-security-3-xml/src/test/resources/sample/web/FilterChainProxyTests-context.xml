@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<b:bean class="org.springframework.security.web.FilterChainProxy">
+		<b:property name="filterChainMap">
+			<b:map>
+				<b:entry key="#{T(org.springframework.security.web.util.matcher.AnyRequestMatcher).INSTANCE}">
+					<b:ref bean="mockFilter"/>
+				</b:entry>
+			</b:map>
+		</b:property>
+	</b:bean>
+
+	<b:bean id="mockFilter" class="org.mockito.Mockito" factory-method="mock">
+		<b:constructor-arg value="javax.servlet.Filter"/>
+	</b:bean>
+</b:beans>

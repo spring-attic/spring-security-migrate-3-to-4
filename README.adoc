@@ -1,0 +1,4 @@
+= Migrating from Spring Security 3.x to 4.x
+
+This project demonstrates how to migrate from Spring Security 3.x to Spring Security 4.x.
+You can find detailed instructions in the http://docs.spring.io/spring-security/site/docs/4.0.x/reference/htmlsingle/#m3to4[Spring Security 4 Reference]

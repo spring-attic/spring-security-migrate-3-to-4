@@ -1,0 +1,1310 @@
+[[m3to4]]
+= Migrating from Spring Security 3.x to 4.x (Java Configuration)
+Rob Winch <https://twitter.com/rob_winch[@rob_winch]>
+
+This guide is intended to help users migrate from Spring Security 3.x to Spring Security 4.x when using Java based configuration.
+If you are looking to migrate from Spring Security 3.x to Spring Security 4.x when using XML Based configuration, link:./migrate-3-to-4-xml.html[click here]
+
+[[m3to4-intro]]
+== Introduction
+
+As exploits against applications evolve, so must Spring Security.
+As a major release version, the Spring Security team took the opportunity to make some non-passive changes which focus on:
+
+* Ensuring Spring Security is more https://www.owasp.org/index.php/Establish_secure_defaults[secure by default]
+* Minimizing https://www.owasp.org/index.php/Information_Leakage[Information Leakage]
+* Removing deprecated APIs
+
+A complete listing of non-passive changes between 3.x and 4.x can be found in https://jira.spring.io/issues/?jql=project%20%3D%20SEC%20AND%20fixVersion%20in%20(4.0.0%2C%204.0.0.M1%2C%204.0.0.M2%2C%204.0.0.RC1%2C%204.0.0.RC2)%20AND%20labels%20%3D%20passivity[JIRA]
+
+[[m3to4-sample]]
+== Sample Migration
+
+A sample illustrating all of the changes in a migration can be found on {spring-security-migration-github-url}[github].
+The sample demonstrates migrating {spring-security-migration-github-url}tree/master/jc/spring-security-3-jc[spring-security-3-jc] to Spring Security 4.
+The completed migration can be found in {spring-security-migration-github-url}tree/master/jc/spring-security-4-jc[spring-security-4-jc]
+
+You can find a diff of the changes on {spring-security-migration-github-url}compare/jc?expand=1[github].
+
+[[m3to4-update-spring]]
+== Updating to Spring 4.1.x
+
+Spring Security 4 now requires Spring 4.
+Conveniently, Spring Security 3.2.x works with Spring 3.2.x and Spring 4.
+This means your first step is to update to Spring 4.1.x.
+
+For detailed instructions refer to:
+
+* https://github.com/spring-projects/spring-framework/wiki/Migrating-from-earlier-versions-of-the-spring-framework#migrating-to-spring-framework-40[Migrating to Spring Framework 4.0]
+* https://github.com/spring-projects/spring-framework/wiki/Migrating-from-earlier-versions-of-the-spring-framework#migrating-to-spring-framework-41[Migrating to Spring Framework 4.1]
+
+[[m3to4-deprecations]]
+== Deprecations
+
+A number of deprecations were removed in Spring Security 4 to clean up clutter.
+The following section describes how to migrate each deprecation.
+
+If you are using the Java configuration, there are many instances where you will be shielded from deprecation.
+If you (or a non-spring library you use) do NOT use an API directly, then you will NOT be impacted.
+This means typically a quick search in your workspace should allow you to find all the deprecations.
+
+[[m3to4-deprecations-related]]
+=== Related Links
+
+For thoroughness we have include the related links in the table below.
+
+|====
+| JIRA | Commits
+
+| https://jira.spring.io/browse/SEC-2781[SEC-2781]
+| https://github.com/spring-projects/spring-security/commit/6e204fff72b80196a83245cbc3bd0cd401feda00[6e204ff]
+|====
+
+[[m3to4-deprecations-acl]]
+=== spring-security-acl
+
+This section describes all of the deprecated APIs within the spring-security-acl module.
+If you are not using the spring-security-acl module, you can safely skip to <<m3to4-deprecations-cas>>.
+
+[[m3to4-deprecations-acl-aclimpl]]
+==== AclImpl
+
+AclImpl had a deprecated constructor removed.
+Specifically, the constructor that defaults the `PermissionGrantingStrategy` was removed:
+
+[source,java]
+----
+@Deprecated
+public AclImpl(ObjectIdentity objectIdentity, Serializable id,
+			AclAuthorizationStrategy aclAuthorizationStrategy,
+			AuditLogger auditLogger, Acl parentAcl,
+			List<Sid> loadedSids, boolean entriesInheriting, Sid owner) {
+		...
+}
+----
+
+This means that an AclImpl was being created with this constructor:
+
+[source,java]
+----
+new AclImpl(objectIdentity, id, aclAuthorizationStrategy, auditLogger,
+								parentAcl, loadedSids, entriesInheriting, owner);
+----
+
+it needs to be updated to pass in the `PermissionGrantingStrategy` instead of the `AuditLogger`
+
+
+[source,java]
+----
+PermissionGrantingStrategy permissionGrantingStrategy =
+	new DefaultPermissionGrantingStrategy(auditLogger);
+new AclImpl(objectIdentity, id, aclAuthorizationStrategy, permissionGrantingStrategy,
+						parentAcl, loadedSids, entriesInheriting, owner);
+----
+
+[[m3to4-deprecations-acl-ehcachebasedaclcache]]
+==== EhCacheBasedAclCache
+
+`EhCacheBasedAclCache` had a deprecated constructor removed.
+Specifically, the constructor that defaults the `PermissionGrantingStrategy` was removed:
+
+[source,java]
+----
+@Deprecated
+public EhCacheBasedAclCache(Ehcache cache) {
+	...
+}
+----
+
+This means that an `EhCacheBasedAclCache` was being created with this constructor:
+
+[source,java]
+----
+new EhCacheBasedAclCache(ehCache);
+----
+
+it needs to be updated to pass in the `PermissionGrantingStrategy` and `AclAuthorizationStrategy` too:
+
+
+[source,java]
+----
+PermissionGrantingStrategy permissionGrantingStrategy =
+				new DefaultPermissionGrantingStrategy(auditLogger);
+AclAuthorizationStrategy aclAuthorizationStrategy =
+		new AclAuthorizationStrategyImpl(new SimpleGrantedAuthority("ROLE_ACL_ADMIN"));
+new EhCacheBasedAclCache(ehCache, permissionGrantingStrategy, aclAuthorizationStrategy);
+----
+
+[[m3to4-deprecations-cas]]
+=== spring-security-cas
+
+This section describes all of the deprecated APIs within the spring-security-cas module.
+If you are not using the spring-security-cas module, you can safely skip to <<m3to4-deprecations-core>>.
+
+[[m3to4-deprecations-cas-serviceauthenticationdetailssource]]
+==== ServiceAuthenticationDetailsSource
+
+`ServiceAuthenticationDetailsSource` removed the deprecated construtors that defaulted the `ServiceProperties`.
+
+[source,java]
+----
+@Deprecated
+public ServiceAuthenticationDetailsSource() {
+	...
+}
+
+@Deprecated
+public ServiceAuthenticationDetailsSource(final String artifactParameterName) {
+	...
+}
+----
+
+This means that an `ServiceAuthenticationDetailsSource` was being created with these constructors:
+
+[source,java]
+----
+new ServiceAuthenticationDetailsSource();
+
+new ServiceAuthenticationDetailsSource(artifactId);
+----
+
+it needs to be updated to pass in the `ServiceProperties` as shown below:
+
+
+[source,java]
+----
+new ServiceAuthenticationDetailsSource(serviceProperties);
+
+new ServiceAuthenticationDetailsSource(serviceProperties, artifactId);
+----
+
+[[m3to4-deprecations-core]]
+=== spring-security-core
+
+This section describes all of the deprecated APIs within the spring-security-core module.
+If you are not using the spring-security-core module or have already completed this task, you can safely skip to <<m3to4-deprecations-openid>>.
+
+[[m3to4-deprecations-core-securityconfig]]
+==== SecurityConfig
+
+`SecurityConfig.createSingleAttributeList(String)` was removed in favor of using `SecurityConfig.createList(String...)`.
+This means if you have something like this:
+
+[source,java]
+----
+List<ConfigAttribute> attrs =
+		SecurityConfig.createSingleAttributeList("ROLE_USER");
+----
+
+needs to be replaced with:
+
+[source,java]
+----
+List<ConfigAttribute> attrs =
+		SecurityConfig.createList("ROLE_USER");
+----
+
+[[m3to4-deprecations-core-udsw]]
+==== UserDetailsServiceWrapper
+
+`UserDetailsServiceWrapper` was deprecated in favor of using `RoleHierarchyAuthoritiesMapper`.
+For example, if you have something like this:
+
+[source,java]
+----
+@Bean
+public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers) {
+	return new ProviderManager(providers);
+}
+
+@Bean
+public AuthenticationProvider authenticationProvider(UserDetailsServiceWrapper userDetailsService) {
+	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+	provider.setUserDetailsService(userDetailsService);
+	return provider;
+}
+
+@Bean
+public UserDetailsServiceWrapper userDetailsServiceWrapper(RoleHierarchy roleHierarchy) {
+	UserDetailsServiceWrapper wrapper = new UserDetailsServiceWrapper();
+	wrapper.setRoleHierarchy(roleHierarchy);
+	wrapper.setUserDetailsService(userDetailsService());
+	return wrapper;
+}
+----
+
+then it needs to be migrated with something like this:
+
+[source,java]
+----
+@Bean
+public AuthenticationManager authenticationManager(List<AuthenticationProvider> providers) {
+	return new ProviderManager(providers);
+}
+
+@Bean
+public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, GrantedAuthoritiesMapper authoritiesMapper) {
+	DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+	provider.setUserDetailsService(userDetailsService);
+	provider.setAuthoritiesMapper(authoritiesMapper);
+	return provider;
+}
+
+@Bean
+public RoleHierarchyAuthoritiesMapper roleHierarchyAuthoritiesMapper(RoleHierarchy roleHierarchy) {
+	return new RoleHierarchyAuthoritiesMapper(roleHierarchy);
+}
+----
+
+
+[[m3to4-deprecations-core-udw]]
+==== UserDetailsWrapper
+`UserDetailsWrapper` was deprecated in favor of using `RoleHierarchyAuthoritiesMapper`.
+Typically users would not use the `UserDetailsWrapper` directly. However, if they are they can use `RoleHierarchyAuthoritiesMapper`
+For example, if the following code is present:
+
+[source,java]
+----
+UserDetailsWrapper authenticate = new UserDetailsWrapper(userDetails, roleHiearchy);
+----
+
+then it needs to be replaced by:
+
+[source,java]
+----
+Collection<GrantedAuthority> allAuthorities =
+		roleHiearchy.getReachableGrantedAuthorities(userDetails.getAuthorities());
+UserDetails authenticate =
+		new User(userDetails.getUsername(), userDetails.getPassword(), allAuthorities);
+----
+
+[[m3to4-deprecations-core-aadm]]
+==== AbstractAccessDecisionManager
+
+The default constructor for `AbstractAccessDecisionManager` has been deprecated along with the `setDecisionVoters` method.
+Naturally, this impacts the subclasses `AffirmativeBased`, `ConsensusBased`, and `UnanimousBased`.
+For example, this means that if you are using the following:
+
+[source,java]
+----
+AffirmativeBased adm = new AffirmativeBased();
+adm.setDecisionVoters(voters);
+----
+
+it needs to be migrated to:
+
+[source,java]
+----
+AffirmativeBased adm = new AffirmativeBased(voters);
+----
+
+[[m3to4-deprecations-core-ae]]
+==== AuthenticationException
+
+The constructor that accepts extraInformation within `AuthenticationException` was removed to prevent accidental leaking of the `UserDetails`.
+Specifically, the following we removed.
+
+[source,java]
+----
+public AccountExpiredException(String msg, Object extraInformation) {
+...
+}
+----
+
+This impacts the subclasses `AccountStatusException`, `AccountExpiredException`, `BadCredentialsException`, `CredentialsExpiredException`, `DisabledException`, `LockedException`, and `UsernameNotFoundException`.
+If use are using any of these constructors, simply remove the additional argument.
+For example, the following is changed from:
+
+[source,java]
+----
+new LockedException("Message", userDetails);
+----
+
+to:
+
+[source,java]
+----
+new LockedException("Message");
+----
+
+
+[[m3to4-deprecations-core-aap]]
+==== AnonymousAuthenticationProvider
+
+`AnonymousAuthenticationProvider` default constructor and `setKey` method was deprecated in favor of using constructor injection.
+For example, if you have the following:
+
+[source,java]
+----
+AnonymousAuthenticationProvider provider = new AnonymousAuthenticationProvider();
+provider.setKey(key);
+----
+
+it should be changed to:
+
+[source,java]
+----
+AnonymousAuthenticationProvider provider = new AnonymousAuthenticationProvider(key);
+----
+
+[[m3to4-deprecations-core-adsi]]
+==== AuthenticationDetailsSourceImpl
+
+`AuthenticationDetailsSourceImpl` was deprecated in favor of writing a custom `AuthenticationDetailsSource`.
+For example, if you have the following:
+
+[source,java]
+----
+AuthenticationDetailsSourceImpl source = new AuthenticationDetailsSourceImpl();
+source.setClazz(CustomWebAuthenticationDetails.class);
+----
+
+You should implement `AuthenticationDetailsSource` directly to return `CustomSource`:
+
+[source,java]
+----
+public class CustomWebAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> {
+
+	public WebAuthenticationDetails buildDetails(HttpServletRequest context) {
+		return new CustomWebAuthenticationDetails(context);
+	}
+}
+----
+
+[[m3to4-deprecations-core-pm]]
+==== ProviderManager
+
+`ProviderManager` has removed the deprecated default constructor and the correspdonding setter methods in favor of using constructor injection.
+It has also removed the clearExtraInformation property since the `AuthenticationException` had the extra information property removed.
+
+For example, if you have something like the following:
+
+[source,java]
+----
+ProviderManager provider = new ProviderManager();
+provider.setParent(parent);
+provider.setProviders(providers);
+provider.setClearExtraInformation(true);
+----
+
+then it should be changed to:
+
+[source,java]
+----
+ProviderManager provider = new ProviderManager(providers, parent);
+----
+
+NOTE: The `clearExtraInformation` property was removed since the `AuthenticationException` had the extra information property removed. So there is no replacement for this.
+
+[[m3to4-deprecations-core-rmap]]
+==== RememberMeAuthenticationProvider
+`RememberMeAuthenticationProvider` had the default constructor and the `setKey` method removed in favor of constructor injection.
+For example:
+
+[source,java]
+----
+RememberMeAuthenticationProvider provider = new RememberMeAuthenticationProvider();
+provider.setKey(key);
+----
+
+should be migrated to:
+
+[source,java]
+----
+RememberMeAuthenticationProvider provider = new RememberMeAuthenticationProvider(key);
+----
+
+
+[[m3to4-deprecations-core-gai]]
+==== GrantedAuthorityImpl
+
+`GrantedAuthorityImpl` was removed in favor of `SimpleGrantedAuthority` or implementing your own.
+For example:
+
+[source,java]
+----
+new GrantedAuthorityImpl(role);
+----
+
+should be replaced with
+
+[source,java]
+----
+new SimpleGrantedAuthority(role);
+----
+
+[[m3to4-deprecations-core-imdi]]
+==== InMemoryDaoImpl
+
+`InMemoryDaoImpl` was replaced in favor of `InMemoryUserDetailsManager`
+
+For example the following:
+
+[source,java]
+----
+InMemoryDaoImpl uds = new InMemoryDaoImpl();
+uds.setUserProperties(properties);
+----
+
+should be replaced with
+
+[source,java]
+----
+InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager(properties);
+----
+
+[[m3to4-deprecations-openid]]
+==== spring-security-openid
+
+This section describes all of the deprecated APIs within the spring-security-openid module.
+If you are not using the spring-security-openid module or have already completed this task, you can safely skip to <<m3to4-deprecations-taglibs>>.
+
+[[m3to4-deprecations-openid-oi4jc]]
+==== OpenID4JavaConsumer
+
+The `OpenID4JavaConsumer` constructors that accept `List<OpenIDAttribute>` have been removed in favor of using an `AxFetchListFactory`.
+For example:
+
+[source,java]
+----
+new OpenID4JavaConsumer(attributes);
+----
+
+should be replaced with:
+
+[source,java]
+----
+Map<String, List<OpenIDAttribute>> regexMap = new HashMap<String,List<OpenIDAttribute>>();
+regexMap.put(".*", attributes);
+RegexBasedAxFetchListFactory factory = new RegexBasedAxFetchListFactory(regexMap);
+new OpenID4JavaConsumer(factory);
+----
+
+[[m3to4-deprecations-taglibs]]
+=== spring-security-taglibs
+
+This section describes all of the deprecated APIs within the spring-security-taglibs module.
+If you are not using the spring-security-taglibs module or have already completed this task, you can safely skip to <<m3to4-deprecations-web>>.
+
+Spring Security's authorize JSP tag deprecated the properties `ifAllGranted`, `ifAnyGranted`, and `ifNotGranted` in favor of using expressions.
+
+For example:
+
+[source,xml]
+----
+<sec:authorize ifAllGranted="ROLE_ADMIN,ROLE_USER">
+	<p>Must have ROLE_ADMIN and ROLE_USER</p>
+</sec:authorize>
+<sec:authorize ifAnyGranted="ROLE_ADMIN,ROLE_USER">
+	<p>Must have ROLE_ADMIN or ROLE_USER</p>
+</sec:authorize>
+<sec:authorize ifNotGranted="ROLE_ADMIN,ROLE_USER">
+	<p>Must not have ROLE_ADMIN or ROLE_USER</p>
+</sec:authorize>
+----
+
+can be replaced with:
+
+[source,xml]
+----
+<sec:authorize access="hasRole('ROLE_ADMIN') and hasRole('ROLE_USER')">
+	<p>Must have ROLE_ADMIN and ROLE_USER</p>
+</sec:authorize>
+<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+	<p>Must have ROLE_ADMIN or ROLE_USER</p>
+</sec:authorize>
+<sec:authorize access="!hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+	<p>Must not have ROLE_ADMIN or ROLE_USER</p>
+</sec:authorize>
+----
+
+[[m3to4-deprecations-web]]
+=== spring-security-web
+
+This section describes all of the deprecated APIs within the spring-security-taglibs module.
+If you are not using the spring-security-taglibs module or have already completed this task, you can safely skip to <<m3to4-xmlnamespace-defaults>>.
+
+[[m3to4-deprecations-web-fcp]]
+==== FilterChainProxy
+
+`FilterChainProxy` removed the `setFilterChainMap` method in favor of constructor injection.
+For example, if you have the following:
+
+[source,java]
+----
+FilterChainProxy filter = new FilterChainProxy();
+filter.setFilterChainMap(filterChainMap);
+----
+
+it should be replaced with:
+
+[source,java]
+----
+FilterChainProxy filter = new FilterChainProxy(securityFilterChains);
+----
+
+`FilterChainProxy` also removed `getFilterChainMap` in favor of using `getFilterChains` for example:
+
+[source,java]
+----
+FilterChainProxy securityFilterChain = ...
+Map<RequestMatcher,List<Filter>> mappings = securityFilterChain.getFilterChainMap();
+for(Map.Entry<RequestMatcher, List<Filter>> entry : mappings.entrySet()) {
+	RequestMatcher matcher = entry.getKey();
+	boolean matches = matcher.matches(request);
+	List<Filter> filters = entry.getValue();
+}
+----
+
+should be replaced with
+
+
+[source,java]
+----
+FilterChainProxy securityFilterChain = ...
+List<SecurityFilterChain> mappings = securityFilterChain.getFilterChains();
+for(SecurityFilterChain entry : mappings) {
+	boolean matches = entry.matches(request);
+	List<Filter> filters = entry.getFilters();
+}
+----
+
+[[m3to4-deprecations-web-etf]]
+==== ExceptionTranslationFilter
+
+The default constructor for `ExceptionTranslationFilter` and the `setAuthenticationEntryPoint` method was removed in favor of using constructor injection.
+
+[source,java]
+----
+ExceptionTranslationFilter filter = new ExceptionTranslationFilter();
+filter.setAuthenticationEntryPoint(entryPoint);
+filter.setRequestCache(requestCache);
+----
+
+can be replaced with
+
+[source,java]
+----
+ExceptionTranslationFilter filter = new ExceptionTranslationFilter(entryPoint, requestCache);
+----
+
+[[m3to4-deprecations-web-aapf]]
+==== AbstractAuthenticationProcessingFilter
+
+`AbstractAuthenticationProcessingFilter` had its `successfulAuthentication(HttpServletRequest,HttpServletResponse,Authentication)` method removed.
+So if your application overrides the following method:
+
+[source,java]
+----
+protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+						Authentication authResult) throws IOException, ServletException {
+}
+----
+
+it should be replaced with:
+
+[source,java]
+----
+protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+						FilterChain chain, Authentication authResult) throws IOException, ServletException {
+}
+----
+
+[[m3to4-deprecations-web-aaf]]
+==== AnonymousAuthenticationFilter
+
+`AnonymousAuthenticationFilter` had the default constructor and the `setKey` and `setPrincipal` methods removed in favor of constructor injection.
+For example:
+
+[source,java]
+----
+AnonymousAuthenticationFilter filter = new AnonymousAuthenticationFilter();
+filter.setKey(key);
+filter.setUserAttribute(attrs);
+----
+
+should be replaced with:
+
+[source,java]
+----
+AnonymousAuthenticationFilter filter =
+		new AnonymousAuthenticationFilter(key,attrs.getPassword(),attrs.getAuthorities());
+----
+
+[[m3to4-deprecations-web-luaep]]
+==== LoginUrlAuthenticationEntryPoint
+
+The `LoginUrlAuthenticationEntryPoint` default constructor and the `setLoginFormUrl` method was removed in favor of constructor injection.
+For example:
+
+[source,java]
+----
+LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint();
+entryPoint.setLoginFormUrl("/login");
+----
+should be replaced with
+
+[source,java]
+----
+LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint(loginFormUrl);
+----
+
+[[m3to4-deprecations-web-pagauds]]
+==== PreAuthenticatedGrantedAuthoritiesUserDetailsService
+
+`PreAuthenticatedGrantedAuthoritiesUserDetailsService` removed `createuserDetails` in favor of `createUserDetails`.
+
+NOTE: The new method has a correction in the case (i.e. U instead of u).
+
+This means if you have a subclass of `PreAuthenticatedGrantedAuthoritiesUserDetailsService` that overrides `createuserDetails`
+
+[source,java]
+----
+public class SubclassPreAuthenticatedGrantedAuthoritiesUserDetailsService extends PreAuthenticatedGrantedAuthoritiesUserDetailsService {
+
+	@Override
+	protected UserDetails createuserDetails(Authentication token,
+			Collection<? extends GrantedAuthority> authorities) {
+		// customize
+	}
+}
+----
+
+it should be changed to override `createUserDetails`
+
+[source,java]
+----
+public class SubclassPreAuthenticatedGrantedAuthoritiesUserDetailsService extends PreAuthenticatedGrantedAuthoritiesUserDetailsService {
+
+	@Override
+	protected UserDetails createUserDetails(Authentication token,
+			Collection<? extends GrantedAuthority> authorities) {
+		// customize
+	}
+}
+----
+
+[[m3to4-deprecations-web-arms]]
+==== AbstractRememberMeServices
+
+`AbstractRememberMeServices` and its subclasses `PersistentTokenBasedRememberMeServices` and `TokenBasedRememberMeServices` removed the default constructor and the `setKey` and `setUserDetailsService` methods in favor of constructor injection.
+
+[[m3to4-deprecations-web-ptbrms]]
+==== PersistentTokenBasedRememberMeServices
+
+`AbstractRememberMeServices` and its subclasses `PersistentTokenBasedRememberMeServices` and `TokenBasedRememberMeServices` removed the default constructor and the `setKey` and `setUserDetailsService` methods in favor of constructor injection.
+For example:
+
+[source,java]
+----
+PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices();
+services.setKey(key);
+services.setUserDetailsService(userDetailsService);
+services.setTokenRepository(tokenRepository);
+----
+
+should be replaced with
+
+[source,java]
+----
+PersistentTokenBasedRememberMeServices services =
+		new PersistentTokenBasedRememberMeServices(key, userDetailsService, tokenRepository);
+----
+
+[[m3to4-deprecations-web-rmaf]]
+==== RememberMeAuthenticationFilter
+
+`RememberMeAuthenticationFilter` default constructor and the `setAuthenticationManager` and `setRememberMeServices` methods were removed in favor of constructor injection.
+
+[source,java]
+----
+RememberMeAuthenticationFilter filter = new RememberMeAuthenticationFilter();
+filter.setAuthenticationManager(authenticationManager);
+filter.setRememberMeServices(rememberMeServices);
+----
+
+should be replaced with
+
+[source,java]
+----
+RememberMeAuthenticationFilter filter =
+		new RememberMeAuthenticationFilter(authenticationManager,rememberMeServices);
+----
+
+[[m3to4-deprecations-web-tbrms]]
+==== TokenBasedRememberMeServices
+
+`AbstractRememberMeServices` and its subclasses `PersistentTokenBasedRememberMeServices` and `TokenBasedRememberMeServices` removed the default constructor and the `setKey` and `setUserDetailsService` methods in favor of constructor injection.
+For example:
+
+[source,java]
+----
+TokenBasedRememberMeServices services = new TokenBasedRememberMeServices();
+services.setKey(key);
+services.setUserDetailsService(userDetailsService);
+----
+
+should be replaced with
+
+[source,java]
+----
+TokenBasedRememberMeServices services =
+		new TokenBasedRememberMeServices(key, userDetailsService);
+----
+
+[[m3to4-deprecations-web-cscs]]
+==== ConcurrentSessionControlStrategy
+
+`ConcurrentSessionControlStrategy` was replaced with `ConcurrentSessionControlAuthenticationStrategy`.
+Previously `ConcurrentSessionControlStrategy` could not be decoupled from `SessionFixationProtectionStrategy`.
+Now it is completely decoupled.
+For example, the following:
+
+[source,java]
+----
+ConcurrentSessionControlStrategy strategy = new ConcurrentSessionControlStrategy(sessionRegistry);
+----
+
+can be replaced with
+
+[source,java]
+----
+List<SessionAuthenticationStrategy> delegates = new ArrayList<SessionAuthenticationStrategy>();
+delegates.add(new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+delegates.add(new SessionFixationProtectionStrategy());
+delegates.add(new RegisterSessionAuthenticationStrategy(sessionRegistry));
+CompositeSessionAuthenticationStrategy strategy = new CompositeSessionAuthenticationStrategy(delegates);
+----
+
+[[m3to4-deprecations-web-sfps]]
+==== SessionFixationProtectionStrategy
+
+`SessionFixationProtectionStrategy` removed `setRetainedAttributes` method in favor of users subclassing `SessionFixationProtectionStrategy` and overriding `extractAttributes` method.
+This means the following:
+
+[source,java]
+----
+SessionFixationProtectionStrategy strategy = new SessionFixationProtectionStrategy();
+strategy.setRetainedAttributes(attrsToRetain);
+----
+
+should be replaced with
+
+[source,java]
+----
+public class AttrsSessionFixationProtectionStrategy extends SessionFixationProtectionStrategy {
+	private final Collection<String> attrsToRetain;
+
+	public AttrsSessionFixationProtectionStrategy(
+			Collection<String> attrsToRetain) {
+		this.attrsToRetain = attrsToRetain;
+	}
+
+	@Override
+	protected Map<String, Object> extractAttributes(HttpSession session) {
+		Map<String,Object> attrs = new HashMap<String, Object>();
+		for(String attr : attrsToRetain) {
+			attrs.put(attr, session.getAttribute(attr));
+		}
+		return attrs;
+	}
+
+}
+
+SessionFixationProtectionStrategy strategy = new AttrsSessionFixationProtectionStrategy(attrsToRetain);
+----
+
+[[m3to4-deprecations-web-baf]]
+==== BasicAuthenticationFilter
+
+`BasicAuthenticationFilter` default constructor and the `setAuthenticationManager` and `setRememberMeServices` methods were removed in favor of constructor injection.
+
+[source,java]
+----
+BasicAuthenticationFilter filter = new BasicAuthenticationFilter();
+filter.setAuthenticationManager(authenticationManager);
+filter.setAuthenticationEntryPoint(entryPoint);
+filter.setIgnoreFailure(true);
+----
+
+should be replaced with
+
+[source,java]
+----
+BasicAuthenticationFilter filter =
+		new BasicAuthenticationFilter(authenticationManager,entryPoint);
+----
+
+NOTE: Using this constructor automatically sets ignoreFalure to true
+
+[[m3to4-deprecations-web-scpf]]
+==== SecurityContextPersistenceFilter
+
+`SecurityContextPersistenceFilter` removed the `setSecurityContextRepository` in favor of constructor injection.
+For example:
+
+[source,java]
+----
+SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter();
+filter.setSecurityContextRepository(securityContextRepository);
+----
+
+should be replaced with
+
+[source,java]
+----
+SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter(securityContextRepository);
+----
+
+[[m3to4-deprecations-web-rcaf]]
+==== RequestCacheAwareFilter
+
+`RequestCacheAwareFilter` removed the `setRequestCache` in favor of constructor injection.
+For example:
+
+[source,java]
+----
+RequestCacheAwareFilter filter = new RequestCacheAwareFilter();
+filter.setRequestCache(requestCache);
+----
+
+should be replaced with
+
+[source,java]
+----
+RequestCacheAwareFilter filter = new RequestCacheAwareFilter(requestCache);
+----
+
+[[m3to4-deprecations-web-csf]]
+==== ConcurrentSessionFilter
+
+`ConcurrentSessionFilter` removed the default constructor and the `setExpiredUrl` and `setSessionRegistry` methods in favor of constructor injection.
+For example:
+
+[source,java]
+----
+ConcurrentSessionFilter filter = new ConcurrentSessionFilter();
+filter.setSessionRegistry(sessionRegistry);
+filter.setExpiredUrl("/expired");
+----
+
+should be replaced with
+
+[source,java]
+----
+ConcurrentSessionFilter filter = new ConcurrentSessionFilter(sessionRegistry,"/expired");
+----
+
+[[m3to4-deprecations-web-smf]]
+==== SessionManagementFilter
+
+`SessionManagementFilter` removed the `setSessionAuthenticationStrategy` method in favor of constructor injection.
+For example:
+
+[source,java]
+----
+SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository);
+filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
+----
+
+should be replaced with
+
+[source,java]
+----
+SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository, sessionAuthenticationStrategy);
+----
+
+[[m3to4-deprecations-web-rm]]
+==== RequestMatcher
+
+The `RequestMatcher` and its implementations have moved from the package `org.springframework.security.web.util` to `org.springframework.security.web.util.matcher`.
+Specifically
+
+* `org.springframework.security.web.util.RequestMatcher` -> `org.springframework.security.web.util.matcher.RequestMatcher`
+* `org.springframework.security.web.util.AntPathRequestMatcher` -> `org.springframework.security.web.util.matcher.AntPathRequestMatcher`
+* `org.springframework.security.web.util.AnyRequestMatcher` -> `org.springframework.security.web.util.matcher.AnyRequestMatcher.INSTANCE`
+* `org.springframework.security.web.util.ELRequestMatcher` -> `org.springframework.security.web.util.matcher.ELRequestMatcher`
+* `org.springframework.security.web.util.IpAddressMatcher` -> `org.springframework.security.web.util.matcher.IpAddressMatcher`
+* `org.springframework.security.web.util.RequestMatcherEditor` -> `org.springframework.security.web.util.matcher.RequestMatcherEditor`
+* `org.springframework.security.web.util.RegexRequestMatcher` -> `org.springframework.security.web.util.matcher.RegexRequestMatcher`
+
+[[m3to4-deprecations-web-wseh]]
+==== WebSecurityExpressionHandler
+
+`WebSecurityExpressionHandler` was removed in favor of using `SecurityExpressionHandler<FilterInvocation>`.
+
+This means if you are using:
+
+[source,java]
+----
+WebSecurityExpressionHandler handler = ...
+----
+
+it needs to be updated to
+
+[source,java]
+----
+SecurityExpressionHandler<FilterInvocation> handler = ...
+----
+
+If you implement WebSecurityExpressionHandler:
+
+[source,java]
+----
+public class CustomWebSecurityExpressionHandler implements WebSecurityExpressionHandler {
+	...
+}
+----
+
+then it must be updated to:
+
+[source,java]
+----
+public class CustomWebSecurityExpressionHandler implements SecurityExpressionHandler<FilterInvocation> {
+	...
+}
+----
+
+[[m3to4-update-security]]
+== Update Spring Security
+
+Now you can update to Spring Security 4.x.
+If you are using Maven and Spring Security's BOM, you can do something like this:
+
+[source,xml]
+----
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-bom</artifactId>
+			<version>4.0.0.RELEASE</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+----
+
+Now all of the Spring Security dependencies that do not specify a version will use the updated Spring Security version.
+
+Alternatively, you can update each of the Spring Security dependencies within your pom.
+For example, the following would update spring-security-core to use version 4.0.0.RELEASE
+
+[source,xml]
+----
+<dependency>
+	<groupId>org.springframework.security</groupId>
+	<artifactId>spring-security-core</artifactId>
+	<version>4.0.0.RELEASE</version>
+</dependency>
+----
+
+[[m3to4-filter-urls]]
+== Migrate Default Filter URLs
+
+A number of servlet Filter's had their default URLs switched to help guard against information leakage.
+
+[[m3to4-filter-urls-related]]
+=== Related Links
+
+For thoroughness we have include the related links in the table below.
+
+|====
+| JIRA | Commits
+
+| https://jira.spring.io/browse/SEC-2783[SEC-2783]
+| https://github.com/spring-projects/spring-security/commit/c67ff42b8abe124b7956896c78e9aac896fd79d9[c67ff42]
+|====
+
+[[m3to4-filter-urls-cas]]
+=== CasAuthenticationFilter
+
+The `CasAuthenticationFilter` filterProcessesUrl property default value changed from "/j_spring_cas_security_check" to "/login/cas".
+This means if the filterProcessesUrl property is not explicitly specified, then the configuration will need updated.
+For example, if an application using Spring Security 3.2.x contains a configuration similar to the following:
+
+[source,java]
+----
+CasAuthenticationFilter filter = new CasAuthenticationFilter();
+filter.setAuthenticationManager(authenticationManager);
+----
+
+The configuration will need to be updated to something similar to the following when Spring Security 4.x:
+
+[source,java]
+----
+CasAuthenticationFilter filter = new CasAuthenticationFilter();
+filter.setFilterProcessesUrl("/j_spring_cas_security_check");
+filter.setAuthenticationManager(authenticationManager);
+----
+
+*Alternatively*, the `ServiceProperties` can be updated to use the new default:
+
+[source,java]
+----
+ServiceProperties properties = new ServiceProperties();
+properties.setService("https://example.com/cas-sample/login/cas");
+----
+
+[[m3to4-filter-urls-switchuser]]
+=== SwitchUserFilter
+
+* The `SwitchUserFilter` switchUserUrl property default value changed from "/j_spring_security_switch_user" to "/login/impersonate".
+This means if the switchUserUrl property is not explicitly specified, then the configuration will need updated.
+* The `SwitchUserFilter` exitUserUrl property default value changed from "/j_spring_security_exit_user" to "/logout/impersonate".
+This means if the exitUserUrl property is not explicitly specified, then the configuration will need updated.
+
+For example, if an application using Spring Security 3.2.x contains a configuration similar to the following:
+
+[source,java]
+----
+@Bean
+public SwitchUserFilter switchUserFilter(
+		UserDetailsService userDetailsService) {
+	SwitchUserFilter filter = new SwitchUserFilter();
+	filter.setTargetUrl("/");
+	filter.setUserDetailsService(userDetailsService);
+	return filter;
+}
+----
+
+The configuration will need to be updated to something similar to the following when Spring Security 4.x:
+
+[source,java]
+----
+@Bean
+public SwitchUserFilter switchUserFilter(
+		UserDetailsService userDetailsService) {
+	SwitchUserFilter filter = new SwitchUserFilter();
+	filter.setExitUserUrl("/j_spring_security_exit_user");
+	filter.setSwitchUserUrl("/j_spring_security_switch_user");
+	filter.setTargetUrl("/");
+	filter.setUserDetailsService(userDetailsService);
+	return filter;
+}
+----
+
+*Alternatively*, the URL's within the application can be updated from:
+
+* "/j_spring_security_switch_user" to "/login/impersonate"
+* "/j_spring_security_exit_user" to "/logout/impersonate"
+
+[[m3to4-header]]
+== Header Configuration Changes
+
+In Spring Security 3.x the HTTP Response Header configuration was difficult to customize.
+If an application overrode a single default, then all of the other defaults would be disabled.
+This was unintuitive, error prone, and most importantly not very secure.
+
+Spring Security 4.x has changed both the Java Configuration and XML Configuration to require explicit disabling of defaults.
+Additionally, it has made customizing a single default much easier.
+
+If an application has customized the HTTP Response Header Configuration in any way, they are impacted by this change.
+If the application used the defaults, then they are not impacted by this change.
+
+A detailed description of how to configure Security HTTP Response Headers can be found in the <<headers,reference>>.
+Below we highlight the changes in configuring the Security HTTP Response Headers between 3.x and 4.x.
+
+* <<m3to4-header-xml,Migrating XML Based Configuration>>
+* <<m3to4-header-jc,Migrating Java Based Configuration>>
+
+[[m3to4-header-related]]
+=== Related Links
+
+For thoroughness we have include the related links in the table below.
+
+|====
+| JIRA | Commits
+
+| https://jira.spring.io/browse/SEC-2348[SEC-2348]
+| https://github.com/spring-projects/spring-security/commit/eedbf442359f9a99e367f2fdef61deea1cef46c9[eedbf44]
+|====
+[[m3to4-header-jc]]
+=== Header Samples
+
+[[m3to4-header-jc-defaults-preserved]]
+==== Migrate Headers Java Config Defaults Preserved
+
+In Spring Security 3.x, the following configuration
+
+[source,java]
+----
+http
+	// ...
+	.headers()
+		.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsMode.SAMEORIGIN));
+----
+
+would add the following header:
+
+[source,http]
+----
+X-Frame-Options: SAMEORIGIN
+----
+
+In Spring Security 4.x, the same configuration would add
+
+[source,http]
+----
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+----
+
+If we want to the configuration the same, we must explicitly disable the other defaults.
+
+[source,java]
+----
+http
+	// ...
+	.headers()
+		// do not use any default headers unless explicitly listed
+		.defaultsDisabled()
+		.frameOptions()
+				.sameOrigin();
+----
+
+would add the following header:
+
+[source,http]
+----
+X-Frame-Options: SAMEORIGIN
+----
+
+
+[[m3to4-header-jc-]]
+==== Migrate Headers Java Config Method Chaining
+
+In Spring Security 3.x, the following configuration
+
+[source,java]
+----
+http
+	// ...
+	.headers()
+		.cacheControl()
+		.frameOptions();
+----
+
+would compile succesfully.
+However, Spring Security 4.x it will not compile.
+This is due to the fact that additional options needed to be added to support customizing the configuration.
+Instead, we must chain the headers customizations with `.and()`.
+For example:
+
+[source,java]
+----
+http
+	// ...
+	.headers()
+		// do not use any default headers unless explicitly listed
+		.defaultsDisabled()
+		.cacheControl().and()
+		.frameOptions();
+----
+
+[[m3to4-role-prefixing]]
+== Automatic ROLE_ prefixing
+
+Spring Security 4 automatically prefixes any role with ROLE_.
+The changes were made as part of https://jira.spring.io/browse/SEC-2758[SEC-2758]
+
+[[m3to4-role-prefixing-related]]
+=== Related Links
+
+For thoroughness we have include the related links in the table below.
+
+|====
+| JIRA | Commits
+
+| https://jira.spring.io/browse/SEC-2758[SEC-2758]
+| https://github.com/spring-projects/spring-security/commit/6627f76df7d93dfd85dd57954f11f595b1ab5f07[6627f76]
+
+| https://jira.spring.io/browse/SEC-2926[SEC-2926]
+| https://github.com/spring-projects/spring-security/commit/09acc2b7a531a5f3ded7cec1226a888441f78584[09acc2b]
+|====
+
+[[m3to4-role-prefixing-passivity]]
+=== ROLE_ Prefixing Passivity
+
+Passivity is impacted if the application's users' roles are *not* prefixed with ROLE_.
+If all of the application's users' roles are prefixed with ROLE_ then it is NOT impacted.
+
+[[m3to4-role-prefixing-disable]]
+=== Disable ROLE_ Prefixing
+
+One can disable automatic ROLE_ prefixing using a `BeanPostProcessor` similar to the following:
+
+[source,java]
+----
+package sample.role_;
+
+import javax.servlet.ServletException;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.PriorityOrdered;
+import org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
+
+public class DefaultRolesPrefixPostProcessor implements BeanPostProcessor, PriorityOrdered {
+
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName)
+			throws BeansException {
+
+		// remove this if you are not using JSR-250
+		if(bean instanceof Jsr250MethodSecurityMetadataSource) {
+			((Jsr250MethodSecurityMetadataSource) bean).setDefaultRolePrefix(null);
+		}
+
+		if(bean instanceof DefaultMethodSecurityExpressionHandler) {
+			((DefaultMethodSecurityExpressionHandler) bean).setDefaultRolePrefix(null);
+		}
+		if(bean instanceof DefaultWebSecurityExpressionHandler) {
+			((DefaultWebSecurityExpressionHandler) bean).setDefaultRolePrefix(null);
+		}
+		if(bean instanceof SecurityContextHolderAwareRequestFilter) {
+			SecurityContextHolderAwareRequestFilter filter = (SecurityContextHolderAwareRequestFilter) bean;
+			filter.setRolePrefix("");
+			try {
+				filter.afterPropertiesSet();
+			}
+			catch (ServletException e) {
+				throw new FatalBeanException(e.getMessage(), e);
+			}
+		}
+
+		return bean;
+	}
+
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName)
+			throws BeansException {
+		return bean;
+	}
+
+	@Override
+	public int getOrder() {
+		return PriorityOrdered.HIGHEST_PRECEDENCE;
+	}
+}
+----
+
+and then defining it as a Bean:
+
+[source,java]
+----
+@Bean
+public static DefaultRolesPrefixPostProcessor defaultRolesPrefixPostProcessor() {
+	return new DefaultRolesPrefixPostProcessor();
+}
+----

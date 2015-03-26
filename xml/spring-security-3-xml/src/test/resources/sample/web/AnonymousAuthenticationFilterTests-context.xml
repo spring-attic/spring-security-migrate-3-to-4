@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<b:bean class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+		<b:property name="key" value="key"/>
+		<b:property name="userAttribute" ref="userAttribute"/>
+	</b:bean>
+
+	<b:bean id="userAttribute" class="org.springframework.security.core.userdetails.memory.UserAttribute">
+		<b:property name="password" value="anonymous"/>
+		<b:property name="authoritiesAsString" value="ROLE_USER"/>
+	</b:bean>
+</b:beans>
