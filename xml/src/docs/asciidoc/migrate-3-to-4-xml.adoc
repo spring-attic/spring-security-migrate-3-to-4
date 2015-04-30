@@ -1790,7 +1790,7 @@ For example, one might update their log in form to look like the following:
 If the `<logout>` is being used within an application, then some of the default attributes have changed.
 Below are detailed description of the changes and how to migrate:
 
-* The {spring-security-docs-url}nsa-form-logout-logout-url[form-login@username-parameter] attribute default value changed from "/j_spring_security_logout" to "/logout".
+* The {spring-security-docs-url}nsa-logout-logout-url[logout@logout-url] attribute default value changed from "/j_spring_security_logout" to "/logout".
 If an application explicitly provides the attribute, no action is required for the migration.
 
 These changes mean if you have the following configuration within your XML configuration when using Spring Security 3.2.x:
