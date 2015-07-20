@@ -6,6 +6,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
 
 public class DefaultRolesPrefixPostProcessor implements BeanPostProcessor, PriorityOrdered {
 
@@ -23,6 +24,9 @@ public class DefaultRolesPrefixPostProcessor implements BeanPostProcessor, Prior
 		}
 		if(bean instanceof DefaultWebSecurityExpressionHandler) {
 			((DefaultWebSecurityExpressionHandler) bean).setDefaultRolePrefix(null);
+		}
+		if(bean instanceof SecurityContextHolderAwareRequestFilter) {
+			((SecurityContextHolderAwareRequestFilter)bean).setRolePrefix("");
 		}
 		return bean;
 	}

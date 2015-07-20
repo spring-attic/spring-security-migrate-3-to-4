@@ -1,9 +1,6 @@
 package sample.role_;
 
-import javax.servlet.ServletException;
-
 import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource;
@@ -29,16 +26,8 @@ public class DefaultRolesPrefixPostProcessor implements BeanPostProcessor, Prior
 			((DefaultWebSecurityExpressionHandler) bean).setDefaultRolePrefix(null);
 		}
 		if(bean instanceof SecurityContextHolderAwareRequestFilter) {
-			SecurityContextHolderAwareRequestFilter filter = (SecurityContextHolderAwareRequestFilter) bean;
-			filter.setRolePrefix("");
-			try {
-				filter.afterPropertiesSet();
-			}
-			catch (ServletException e) {
-				throw new FatalBeanException(e.getMessage(), e);
-			}
+			((SecurityContextHolderAwareRequestFilter)bean).setRolePrefix("");
 		}
-
 		return bean;
 	}
 
