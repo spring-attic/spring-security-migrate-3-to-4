@@ -9,9 +9,10 @@ description = """sample"""
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-ext.springSecurityVersion = '4.0.1.RELEASE'
+ext.springSecurityVersion = '4.0.2.CI-SNAPSHOT'
 
 repositories {
+	maven { url 'https://repo.spring.io/libs-snapshot' }
 	mavenCentral()
 }
 
