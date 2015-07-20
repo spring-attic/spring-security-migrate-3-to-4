@@ -9,7 +9,7 @@ description = """sample"""
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-ext.springSecurityVersion = '4.0.0.RELEASE'
+ext.springSecurityVersion = '4.0.1.RELEASE'
 
 repositories {
 	mavenCentral()

@@ -5,7 +5,7 @@ group = 'org.springframework.security.migrate'
 
 ext.ASCIIDOC_GRADLE = "$rootDir/gradle/asciidoc.gradle"
 
-ext.springVersion = '4.1.6.RELEASE'
+ext.springVersion = '4.1.7.RELEASE'
 
 task docsZip(type: Zip) {
 	baseName = rootProject.name
