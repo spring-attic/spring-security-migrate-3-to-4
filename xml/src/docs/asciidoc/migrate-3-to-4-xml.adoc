@@ -1998,6 +1998,52 @@ NOTE: This approach means that previously remembered users will be forgotten sin
 If you are fine with users needing to authenticate again, then nothing is required.
 If you do not want users to authenticate, then the cookie name must be set to SPRING_SECURITY_REMEMBER_ME_COOKIE as illustrated above.
 
+[[m3to4-xmlnamespace-filter-security-metadata-source]]
+=== Migrating <filter-security-metadata-source>
+
+The {spring-security-docs-url}nsa-filter-security-metadata-source-use-expressions[filter-security-metadata-source@use-expressions] attribute's default value changed from false to true.
+This means if the use-expression attribute is not explicitly configured, then the configuration will need updated.
+For example, if an application using Spring Security 3.2.x contains a configuration similar to the following:
+
+.Spring Security 3.2.x Sample Configuration
+[source,xml]
+----
+<filter-security-metadata-source> <!--1-->
+	<intercept-url pattern="/login" access="ROLE_ANONYMOUS"/>
+	<intercept-url pattern="/**" access="ROLE_USER"/>
+	...
+</filter-security-metadata-source>
+----
+
+<1> Observe that the use-expressions attribute is not provided. If it were provided, then nothing needs to be done.
+
+The configuration will need to be updated to something similar to the following when Spring Security 4.x:
+
+.Migration to Spring Security 4 Configuration
+[source,xml]
+----
+<filter-security-metadata-source use-expressions="false"> <!--1-->
+	<intercept-url pattern="/login" access="ROLE_ANONYMOUS"/>
+	<intercept-url pattern="/**" access="ROLE_USER"/>
+	...
+</filter-security-metadata-source>
+----
+
+<1> We explicitly provide the use-expressions attribute. Again, if the attribute was already provided, then nothing needs to be done.
+
+*Alternatively*, the application can omit the the use-expressions attribute and switch to using expressions.
+For example, something similar to the following:
+
+
+.Alternative Migration to Spring Security 4 Configuration
+[source,xml]
+----
+<filter-security-metadata-source>
+	<intercept-url pattern="/login" access="permitAll"/>
+	<intercept-url pattern="/**" access="hasRole('USER')"/>
+	...
+</filter-security-metadata-source>
+
 [[m3to4-filter-urls]]
 == Migrate Default Filter URLs
 
