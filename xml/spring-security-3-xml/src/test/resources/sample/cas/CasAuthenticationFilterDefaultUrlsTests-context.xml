@@ -8,6 +8,7 @@
 	<b:bean id="casFilter"
 				class="org.springframework.security.cas.web.CasAuthenticationFilter">
 		<b:property name="authenticationManager" ref="authenticationManager"/>
+		<b:property name="filterProcessesUrl" value="/j_spring_cas_security_check"/>
 	</b:bean>
 
 	<authentication-manager id="authenticationManager">

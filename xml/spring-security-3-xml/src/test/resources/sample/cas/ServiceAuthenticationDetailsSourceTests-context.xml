@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <b:beans xmlns:b="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<b:bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/>
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<b:bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource">
-		<b:constructor-arg value="TICKET"/>
+			<b:constructor-arg ref="serviceProperties" />
 	</b:bean>
 
-	<b:bean id="serviceProperties"
-			class="org.springframework.security.cas.ServiceProperties">
-		<b:property name="service"
-				value="https://localhost:8443/cas-sample/j_spring_cas_security_check"/>
-		<b:property name="sendRenew" value="false"/>
+	<b:bean class="org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource">
+			<b:constructor-arg ref="serviceProperties" />
+			<b:constructor-arg value="TICKET" />
+	</b:bean>
+
+	<b:bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+			<b:property name="service"
+					value="https://localhost:8443/cas-sample/j_spring_cas_security_check" />
+			<b:property name="sendRenew" value="false" />
 	</b:bean>
 </b:beans>

@@ -29,6 +29,7 @@ public class HttpPathTypeTests {
 	@Before
 	public void setup() {
 		request = new MockHttpServletRequest();
+		request.setMethod("GET");
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
 	}

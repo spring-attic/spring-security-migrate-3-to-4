@@ -7,7 +7,7 @@
 
 	<b:bean class="org.springframework.security.web.session.SessionManagementFilter">
 		<b:constructor-arg ref="securityContextRepository"/>
-		<b:property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy"/>
+		<b:constructor-arg ref="sessionAuthenticationStrategy"/>
 	</b:bean>
 
 	<b:bean id="sessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy"/>

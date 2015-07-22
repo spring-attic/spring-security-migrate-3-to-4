@@ -22,4 +22,5 @@
 	<global-method-security jsr250-annotations="enabled" pre-post-annotations="enabled"/>
 
 	<b:bean class="sample.role_.HelloWorldMessageService"/>
+	<b:bean class="sample.role_.DefaultRolesPrefixPostProcessor"/>
 </b:beans>

@@ -5,8 +5,8 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
-		<b:property name="authenticationManager" ref="authenticationManager"/>
-		<b:property name="rememberMeServices" ref="rememberMeServices"/>
+		<b:constructor-arg ref="authenticationManager"/>
+		<b:constructor-arg ref="rememberMeServices"/>
 	</b:bean>
 
 	<b:bean id="rememberMeServices"

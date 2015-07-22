@@ -6,8 +6,9 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
-		<b:property name="key" value="key"/>
-		<b:property name="userAttribute" ref="userAttribute"/>
+		<b:constructor-arg value="key"/>
+		<b:constructor-arg value="#{userAttribute.password}"/>
+		<b:constructor-arg value="#{userAttribute.authorities}"/>
 	</b:bean>
 
 	<b:bean id="userAttribute" class="org.springframework.security.core.userdetails.memory.UserAttribute">

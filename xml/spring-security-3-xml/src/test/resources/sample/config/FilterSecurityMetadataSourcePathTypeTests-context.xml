@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<filter-security-metadata-source id="fsms" path-type="regex" use-expressions="false">
+	<filter-security-metadata-source id="fsms" request-matcher="regex" use-expressions="false">
 		<intercept-url pattern=".*" access="ROLE_ADMIN"/>
 	</filter-security-metadata-source>
 </b:beans>

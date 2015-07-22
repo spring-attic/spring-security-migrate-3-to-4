@@ -27,8 +27,7 @@ public class RememberMeAuthenticationFilterTests {
 
 	@Test
 	public void deprecated() {
-		RememberMeAuthenticationFilter filter = new RememberMeAuthenticationFilter();
-		filter.setAuthenticationManager(authenticationManager);
-		filter.setRememberMeServices(rememberMeServices);
+		RememberMeAuthenticationFilter filter =
+				new RememberMeAuthenticationFilter(authenticationManager,rememberMeServices);
 	}
 }

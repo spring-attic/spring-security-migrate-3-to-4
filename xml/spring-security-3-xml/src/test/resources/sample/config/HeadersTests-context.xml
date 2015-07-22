@@ -5,7 +5,7 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<http>
-		<headers>
+		<headers defaults-disabled="true">
 			<frame-options policy="SAMEORIGIN"/>
 		</headers>
 

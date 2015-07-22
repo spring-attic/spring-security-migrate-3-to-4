@@ -23,8 +23,6 @@ public class ConcurrentSessionFilterTests {
 
 	@Test
 	public void deprecated() {
-		ConcurrentSessionFilter filter = new ConcurrentSessionFilter();
-		filter.setSessionRegistry(sessionRegistry);
-		filter.setExpiredUrl("/expired");
+		ConcurrentSessionFilter filter = new ConcurrentSessionFilter(sessionRegistry,"/expired");
 	}
 }

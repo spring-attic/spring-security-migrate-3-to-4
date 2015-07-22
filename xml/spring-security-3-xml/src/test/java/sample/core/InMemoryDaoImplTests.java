@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,7 +29,6 @@ public class InMemoryDaoImplTests {
 		Properties properties = new Properties();
 		properties.put("user","password,ROLE_USER");
 
-		InMemoryDaoImpl uds = new InMemoryDaoImpl();
-		uds.setUserProperties(properties);
+		InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager(properties);
 	}
 }

@@ -4,11 +4,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<b:bean class="org.springframework.security.core.userdetails.memory.InMemoryDaoImpl">
-		<b:property name="userProperties">
+	<b:bean class="org.springframework.security.provisioning.InMemoryUserDetailsManager">
+		<b:constructor-arg>
 			<b:value>
 			user=password,ROLE_USER
 			</b:value>
-		</b:property>
+		</b:constructor-arg>
 	</b:bean>
 </b:beans>

@@ -30,9 +30,6 @@ public class ProviderManagerTests {
 
 	@Test
 	public void javaCompiles() {
-		ProviderManager provider = new ProviderManager();
-		provider.setParent(parent);
-		provider.setProviders(providers);
-		provider.setClearExtraInformation(true);
+		ProviderManager provider = new ProviderManager(providers, parent);
 	}
 }

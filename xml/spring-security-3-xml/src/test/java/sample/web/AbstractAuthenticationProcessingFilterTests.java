@@ -4,6 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.io.IOException;
 
+import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +51,7 @@ public class AbstractAuthenticationProcessingFilterTests {
 			super(AnyRequestMatcher.INSTANCE);
 		}
 
-		protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 				Authentication authResult) throws IOException, ServletException {
 
 			request.setAttribute(KEY, authResult);

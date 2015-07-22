@@ -13,8 +13,6 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class AbstractRememberMeServicesTests {
@@ -33,20 +31,18 @@ public class AbstractRememberMeServicesTests {
 	List<RememberMeServices> services;
 
 	@Test
-	public void configLoads() {}
+	public void configLoads() {
+	}
 
 	@Test
 	public void deprecatedPropertiesPersistentTokenBasedRememberMeServices() {
-		PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices();
-		services.setKey(key);
-		services.setUserDetailsService(userDetailsService);
-		services.setTokenRepository(tokenRepository);
+		PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices(
+				key, userDetailsService, tokenRepository);
 	}
 
 	@Test
 	public void deprecatedPropertiesTokenBasedRememberMeServices() {
-		TokenBasedRememberMeServices services = new TokenBasedRememberMeServices();
-		services.setKey(key);
-		services.setUserDetailsService(userDetailsService);
+		TokenBasedRememberMeServices services = new TokenBasedRememberMeServices(
+				key, userDetailsService);
 	}
 }

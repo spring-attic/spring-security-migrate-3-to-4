@@ -13,7 +13,7 @@ public class SecurityConfigTests {
 	@Test
 	public void createSingleAttributeList() {
 		List<ConfigAttribute> attrs =
-				SecurityConfig.createSingleAttributeList("ROLE_USER");
+				SecurityConfig.createList("ROLE_USER");
 
 		assertThat(attrs).onProperty("attribute").containsOnly("ROLE_USER");
 	}

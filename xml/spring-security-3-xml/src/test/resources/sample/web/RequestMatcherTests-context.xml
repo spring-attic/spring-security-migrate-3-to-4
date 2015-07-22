@@ -5,21 +5,21 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<b:bean class="org.springframework.security.web.util.AntPathRequestMatcher">
+	<b:bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
 		<b:constructor-arg value="/**"/>
 	</b:bean>
-	<b:bean class="org.springframework.security.web.util.AnyRequestMatcher"/>
-	<b:bean class="org.springframework.security.web.util.ELRequestMatcher">
+	<b:bean class="org.springframework.security.web.util.matcher.AnyRequestMatcher"/>
+	<b:bean class="org.springframework.security.web.util.matcher.ELRequestMatcher">
 		<b:constructor-arg value="true"/>
 	</b:bean>
-	<b:bean class="org.springframework.security.web.util.IpAddressMatcher">
+	<b:bean class="org.springframework.security.web.util.matcher.IpAddressMatcher">
 		<b:constructor-arg value="192.168.1.1"/>
 	</b:bean>
-	<b:bean class="org.springframework.security.web.util.RegexRequestMatcher">
+	<b:bean class="org.springframework.security.web.util.matcher.RegexRequestMatcher">
 		<b:constructor-arg value=".*"/>
 		<b:constructor-arg>
 			<b:null/>
 		</b:constructor-arg>
 	</b:bean>
-	<b:bean class="org.springframework.security.web.util.RequestMatcherEditor"/>
+	<b:bean class="org.springframework.security.web.util.matcher.RequestMatcherEditor"/>
 </b:beans>

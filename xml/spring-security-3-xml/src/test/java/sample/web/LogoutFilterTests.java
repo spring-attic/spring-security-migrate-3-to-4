@@ -43,7 +43,7 @@ public class LogoutFilterTests {
 
 	@Test
 	public void logoutUrl() throws Exception {
-		request.setRequestURI("/j_spring_security_logout");
+		request.setServletPath("/j_spring_security_logout");
 
 		filter.doFilter(request, response, chain);
 
