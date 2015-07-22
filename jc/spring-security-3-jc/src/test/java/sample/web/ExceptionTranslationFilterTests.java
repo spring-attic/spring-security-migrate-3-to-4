@@ -14,8 +14,6 @@ public class ExceptionTranslationFilterTests {
 		RequestCache requestCache = new NullRequestCache();
 		AuthenticationEntryPoint entryPoint = new Http403ForbiddenEntryPoint();
 
-		ExceptionTranslationFilter filter = new ExceptionTranslationFilter();
-		filter.setAuthenticationEntryPoint(entryPoint);
-		filter.setRequestCache(requestCache);
+		ExceptionTranslationFilter filter = new ExceptionTranslationFilter(entryPoint, requestCache);
 	}
 }

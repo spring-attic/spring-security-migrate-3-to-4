@@ -71,6 +71,8 @@ public class SwitchUserFilterTests {
 		public SwitchUserFilter switchUserFilter(
 				UserDetailsService userDetailsService) {
 			SwitchUserFilter filter = new SwitchUserFilter();
+			filter.setExitUserUrl("/j_spring_security_exit_user");
+			filter.setSwitchUserUrl("/j_spring_security_switch_user");
 			filter.setTargetUrl("/");
 			filter.setUserDetailsService(userDetailsService);
 			return filter;

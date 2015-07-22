@@ -21,29 +21,26 @@ public class AbstractAccessDecisionManagerTests {
 	@Mock
 	List<AccessDecisionManager> adm;
 
-	List<AccessDecisionVoter> voters;
+	List<AccessDecisionVoter<? extends Object>> voters;
 
 	@Before
 	public void setup() {
 		voters = Arrays
-				.<AccessDecisionVoter> asList(mock(AccessDecisionVoter.class));
+				.<AccessDecisionVoter<? extends Object>> asList(mock(AccessDecisionVoter.class));
 	}
 
 	@Test
 	public void affirmativeBased() {
-		AffirmativeBased adm = new AffirmativeBased();
-		adm.setDecisionVoters(voters);
+		AffirmativeBased adm = new AffirmativeBased(voters);
 	}
 
 	@Test
 	public void consensusBased() {
-		ConsensusBased adm = new ConsensusBased();
-		adm.setDecisionVoters(voters);
+		ConsensusBased adm = new ConsensusBased(voters);
 	}
 
 	@Test
 	public void unanimousBased() {
-		UnanimousBased adm = new UnanimousBased();
-		adm.setDecisionVoters(voters);
+		UnanimousBased adm = new UnanimousBased(voters);
 	}
 }

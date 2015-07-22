@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyAuthoritiesMapper;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper;
-import org.springframework.security.access.hierarchicalroles.UserDetailsWrapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -47,7 +45,6 @@ public class UserDetailsServiceWrapperTests {
 				.containsOnly("ROLE_USER", "ROLE_ADMIN");
 	}
 
-
 	@Configuration
 	static class Config {
 		@Bean
@@ -67,18 +64,16 @@ public class UserDetailsServiceWrapperTests {
 		}
 
 		@Bean
-		public AuthenticationProvider authenticationProvider(UserDetailsServiceWrapper userDetailsService) {
+		public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, GrantedAuthoritiesMapper authoritiesMapper) {
 			DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 			provider.setUserDetailsService(userDetailsService);
+			provider.setAuthoritiesMapper(authoritiesMapper);
 			return provider;
 		}
 
 		@Bean
-		public UserDetailsServiceWrapper userDetailsServiceWrapper(RoleHierarchy roleHierarchy) {
-			UserDetailsServiceWrapper wrapper = new UserDetailsServiceWrapper();
-			wrapper.setRoleHierarchy(roleHierarchy);
-			wrapper.setUserDetailsService(userDetailsService());
-			return wrapper;
+		public RoleHierarchyAuthoritiesMapper roleHierarchyAuthoritiesMapper(RoleHierarchy roleHierarchy) {
+			return new RoleHierarchyAuthoritiesMapper(roleHierarchy);
 		}
 
 		@Bean

@@ -19,18 +19,16 @@ public class AbstractRememberMeServicesTests {
 	@Mock
 	PersistentTokenRepository tokenRepository;
 
+
 	@Test
 	public void deprecatedPropertiesPersistentTokenBasedRememberMeServices() {
-		PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices();
-		services.setKey(key);
-		services.setUserDetailsService(userDetailsService);
-		services.setTokenRepository(tokenRepository);
+		PersistentTokenBasedRememberMeServices services = new PersistentTokenBasedRememberMeServices(
+				key, userDetailsService, tokenRepository);
 	}
 
 	@Test
 	public void deprecatedPropertiesTokenBasedRememberMeServices() {
-		TokenBasedRememberMeServices services = new TokenBasedRememberMeServices();
-		services.setKey(key);
-		services.setUserDetailsService(userDetailsService);
+		TokenBasedRememberMeServices services = new TokenBasedRememberMeServices(
+				key, userDetailsService);
 	}
 }

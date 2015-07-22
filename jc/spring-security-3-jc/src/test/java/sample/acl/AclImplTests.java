@@ -10,8 +10,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.acls.domain.AclAuthorizationStrategy;
 import org.springframework.security.acls.domain.AclImpl;
 import org.springframework.security.acls.domain.AuditLogger;
+import org.springframework.security.acls.domain.DefaultPermissionGrantingStrategy;
 import org.springframework.security.acls.model.Acl;
 import org.springframework.security.acls.model.ObjectIdentity;
+import org.springframework.security.acls.model.PermissionGrantingStrategy;
 import org.springframework.security.acls.model.Sid;
 
 
@@ -34,7 +36,9 @@ public class AclImplTests {
 
 	@Test
 	public void constructor() {
-		new AclImpl(objectIdentity, id, aclAuthorizationStrategy, auditLogger,
-				parentAcl, loadedSids, entriesInheriting, owner);
+		PermissionGrantingStrategy permissionGrantingStrategy =
+				new DefaultPermissionGrantingStrategy(auditLogger);
+		new AclImpl(objectIdentity, id, aclAuthorizationStrategy, permissionGrantingStrategy,
+								parentAcl, loadedSids, entriesInheriting, owner);
 	}
 }

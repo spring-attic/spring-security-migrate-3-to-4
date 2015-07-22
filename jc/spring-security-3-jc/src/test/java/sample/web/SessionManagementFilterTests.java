@@ -32,8 +32,7 @@ public class SessionManagementFilterTests {
 	static class Config {
 		@Bean
 		public SessionManagementFilter sessionManagementFilter(SecurityContextRepository securityContextRepository, SessionAuthenticationStrategy sessionAuthenticationStrategy) {
-			SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository);
-			filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
+			SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository,sessionAuthenticationStrategy);
 			return filter;
 		}
 

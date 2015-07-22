@@ -20,8 +20,7 @@ public class AnonymousAuthenticationFilterTests {
 
 	@Test
 	public void deprecatedProperties() {
-		AnonymousAuthenticationFilter filter = new AnonymousAuthenticationFilter();
-		filter.setKey(key);
-		filter.setUserAttribute(attrs);
+		AnonymousAuthenticationFilter filter =
+				new AnonymousAuthenticationFilter(key,attrs.getPassword(),attrs.getAuthorities());
 	}
 }
