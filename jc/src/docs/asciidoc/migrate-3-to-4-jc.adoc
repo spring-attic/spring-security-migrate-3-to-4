@@ -1090,6 +1090,37 @@ public SwitchUserFilter switchUserFilter(
 * "/j_spring_security_switch_user" to "/login/impersonate"
 * "/j_spring_security_exit_user" to "/logout/impersonate"
 
+[[m3to4-filter-urls-logout]]
+=== LogoutFilter
+
+The `LogoutFilter` filterProcessesUrl property default value changed from "/j_spring_security_logout" to "/logout".
+This means if the filterProcessesUrl property is not explicitly specified, then the configuration will need updated.
+
+For example, if an application using Spring Security 3.2.x contains a configuration similar to the following:
+
+[source,java]
+----
+@Bean
+public LogoutFilter logoutFilter() {
+	LogoutFilter filter = new LogoutFilter("/logout/success", new SecurityContextLogoutHandler());
+	return filter;
+}
+----
+
+The configuration will need to be updated to something similar to the following when Spring Security 4.x:
+
+[source,java]
+----
+@Bean
+public LogoutFilter logoutFilter() {
+	LogoutFilter filter = new LogoutFilter("/logout/success", new SecurityContextLogoutHandler());
+	filter.setFilterProcessesUrl("/j_spring_security_logout");
+	return filter;
+}
+----
+
+*Alternatively*, the URL's within the application can be updated from "/j_spring_security_logout" to "/logout".
+
 [[m3to4-header]]
 == Header Configuration Changes
 
