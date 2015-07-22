@@ -2043,6 +2043,7 @@ For example, something similar to the following:
 	<intercept-url pattern="/**" access="hasRole('USER')"/>
 	...
 </filter-security-metadata-source>
+----
 
 [[m3to4-filter-urls]]
 == Migrate Default Filter URLs
