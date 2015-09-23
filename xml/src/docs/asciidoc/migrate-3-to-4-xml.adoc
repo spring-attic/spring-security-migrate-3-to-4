@@ -1903,6 +1903,12 @@ For example:
 *Alternatively*, the application would enable Security HTTP Response Headers.
 In many instances, leaving the Security HTTP Response Headers enabled will not have a negative impact on an application.
 
+[NOTE]
+====
+http://docs.spring.io/spring-security/site/docs/current/reference/html/headers.html#headers-hsts[Strict Transport Security] will cause infinite redirects if anywhere within your domain forcefully redirects from HTTPS to HTTP for a subset of pages.
+If your domain forcfully redirects to HTTP when HTTPS is requested, you will need to ensure to remove the redirect (recommended) or disable Strict Transport Security.
+====
+
 Developers are encouraged to read <<headers,Security HTTP Response Headers>> for details on using this feature.
 
 [[m3to4-xmlnamespace-csrf]]
