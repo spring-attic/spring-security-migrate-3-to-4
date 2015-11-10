@@ -1949,7 +1949,7 @@ If the `<remember-me>` element is being used within an application, then some of
 Below are detailed description of the changes and how to migrate:
 
 * The {spring-security-docs-url}nsa-remember-me-remember-me-parameter[remember-me@remember-me-parameter] attribute default value changed from "_spring_security_remember_me" to "remember-me". If an application explicitly provides the attribute, no action is required for the migration.
-* The {spring-security-docs-url}nsa-remember-me-remember-me-cookie[remember-me@remember-me-cookie] attribute default value changed from "_spring_security_remember_me" to "SPRING_SECURITY_REMEMBER_ME_COOKIE". If an application explicitly provides the attribute, no action is required for the migration.
+* The {spring-security-docs-url}nsa-remember-me-remember-me-cookie[remember-me@remember-me-cookie] attribute default value changed from "SPRING_SECURITY_REMEMBER_ME_COOKIE" to "remember-me". If an application explicitly provides the attribute, no action is required for the migration.
 
 These changes mean if you have the following configuration within your XML configuration when using Spring Security 3.2.x:
 
@@ -1985,7 +1985,7 @@ For example, one might update their log in form to look like the following:
 .login.html
 [source,xml]
 ----
-<c:url var="loginUrl" value="/login"/> <!--2-->
+<c:url var="loginUrl" value="/login"/>
 <form action="${loginUrl}" method="post">
 	...
 
