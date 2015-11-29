@@ -1313,12 +1313,6 @@ public class DefaultRolesPrefixPostProcessor implements BeanPostProcessor, Prior
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws BeansException {
-		return bean;
-	}
-
-	@Override
 	public int getOrder() {
 		return PriorityOrdered.HIGHEST_PRECEDENCE;
 	}
