@@ -33,7 +33,7 @@ public class PreAuthenticatedGrantedAuthoritiesUserDetailsServiceTests {
 	static class SubclassPreAuthenticatedGrantedAuthoritiesUserDetailsService extends PreAuthenticatedGrantedAuthoritiesUserDetailsService {
 
 		@Override
-		protected UserDetails createuserDetails(Authentication token,
+		protected UserDetails createUserDetails(Authentication token,
 				Collection<? extends GrantedAuthority> authorities) {
 			return new User(CUSTOM_USERNAME, "notused", authorities);
 		}

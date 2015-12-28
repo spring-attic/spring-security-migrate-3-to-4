@@ -5,7 +5,7 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<http>
-		<openid-login />
+		<openid-login login-processing-url="/j_spring_openid_security_check"/>
 	</http>
 
 	<authentication-manager>

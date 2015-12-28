@@ -27,13 +27,14 @@ public class OpenIDTests {
 	@Before
 	public void setup() {
 		request = new MockHttpServletRequest();
+		request.setMethod("GET");
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
 	}
 
 	@Test
 	public void filterProcessUrl() throws Exception {
-		request.setRequestURI("/j_spring_openid_security_check");
+		request.setServletPath("/j_spring_openid_security_check");
 
 		springSecurityFilter.doFilter(request, response, chain);
 

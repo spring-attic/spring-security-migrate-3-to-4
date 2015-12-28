@@ -6,13 +6,12 @@
 
 	<!-- Example with parent, providers, clearExtraInformation properties -->
 	<b:bean class="org.springframework.security.authentication.ProviderManager">
-		<b:property name="parent" ref="parent"/>
-		<b:property name="providers">
+		<b:constructor-arg>
 			<b:list>
 				<b:ref bean="authenticationProvider"/>
 			</b:list>
-		</b:property>
-		<b:property name="clearExtraInformation" value="true"/>
+		</b:constructor-arg>
+		<b:constructor-arg ref="parent"/>
 	</b:bean>
 
 	<b:bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">

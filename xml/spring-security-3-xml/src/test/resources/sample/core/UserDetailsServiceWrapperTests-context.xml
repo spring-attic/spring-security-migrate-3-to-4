@@ -10,12 +10,16 @@
 	</user-service>
 
 	<authentication-manager>
-		<authentication-provider user-service-ref="userDetailsServiceWrapper"/>
+		<authentication-provider ref="authenticationProvider"/>
 	</authentication-manager>
 
-	<b:bean id="userDetailsServiceWrapper" class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
+	<b:bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 		<b:property name="userDetailsService" ref="userDetailsService"/>
-		<b:property name="roleHierarchy" ref="roleHierarchy"/>
+		<b:property name="authoritiesMapper" ref="authoritiesMapper"/>
+	</b:bean>
+
+	<b:bean id="authoritiesMapper" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyAuthoritiesMapper">
+		<b:constructor-arg ref="roleHierarchy"/>
 	</b:bean>
 
 	<b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">

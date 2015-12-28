@@ -22,7 +22,6 @@ public class RememberMeAuthenticationProviderTests {
 
 	@Test
 	public void javaCompiles() {
-		RememberMeAuthenticationProvider provider = new RememberMeAuthenticationProvider();
-		provider.setKey(key);
+		RememberMeAuthenticationProvider provider = new RememberMeAuthenticationProvider(key);
 	}
 }

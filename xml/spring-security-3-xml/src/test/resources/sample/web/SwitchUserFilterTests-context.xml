@@ -5,6 +5,9 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<b:bean id="switchUserProcessingFilter" class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
+		<b:property name="switchUserUrl" value="/j_spring_security_switch_user" />
+		<b:property name="exitUserUrl" value="/j_spring_security_exit_user" />
+
 		<b:property name="userDetailsService" ref="userDetailsService" />
 		<b:property name="targetUrl" value="/" />
 	</b:bean>

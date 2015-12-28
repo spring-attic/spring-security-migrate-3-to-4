@@ -9,7 +9,6 @@ public class AnonymousAuthenticationProviderTests {
 
 	@Test
 	public void constructor() {
-		AnonymousAuthenticationProvider provider = new AnonymousAuthenticationProvider();
-		provider.setKey(key);
+		AnonymousAuthenticationProvider provider = new AnonymousAuthenticationProvider(key);
 	}
 }

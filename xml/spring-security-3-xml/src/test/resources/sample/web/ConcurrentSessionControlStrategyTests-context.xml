@@ -5,8 +5,18 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<b:bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
-		<b:constructor-arg ref="sessionRegistry"/>
+	<b:bean class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+		<b:constructor-arg>
+			<b:list>
+				<b:bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+					<b:constructor-arg ref="sessionRegistry"/>
+				</b:bean>
+				<b:bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy"/>
+				<b:bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+					<b:constructor-arg ref="sessionRegistry"/>
+				</b:bean>
+			</b:list>
+		</b:constructor-arg>
 	</b:bean>
 
 	<b:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>

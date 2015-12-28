@@ -27,7 +27,6 @@ public class SessionManagementFilterTests {
 
 	@Test
 	public void deprecated() {
-		SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository);
-		filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
+		SessionManagementFilter filter = new SessionManagementFilter(securityContextRepository, sessionAuthenticationStrategy);
 	}
 }
