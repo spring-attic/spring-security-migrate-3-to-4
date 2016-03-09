@@ -11,7 +11,7 @@ If you are looking to migrate from Spring Security 3.x to Spring Security 4.x wh
 
 As exploits against applications evolve, so must Spring Security.
 As a major release version, the Spring Security team took the opportunity to make some non-passive changes which focus on:
-
+lo
 * Ensuring Spring Security is more https://www.owasp.org/index.php/Establish_secure_defaults[secure by default]
 * Minimizing https://www.owasp.org/index.php/Information_Leakage[Information Leakage]
 * Removing deprecated APIs
@@ -1819,6 +1819,38 @@ NOTE: If the logout-url attribute is already explicitly provided the application
 ----
 
 <1> If the configuration does not specify the logout-url attribute, then it should be explicitly stated
+
+**Alternatively**, the application can be updated to use the new defaults.
+
+* The {spring-security-docs-url}nsa-logout-logout-success-url[logout@logout-success-url] attribute default value changed from "/" to the log in page + "?logout". For example, if the log in page is "/login", then the log out success page is "/login?logout".
+If an application explicitly provides the attribute, no action is required for the migration.
+
+These changes mean if you have the following configuration within your XML configuration when using Spring Security 3.2.x:
+
+.Spring Security 3.2.x Sample Configuration
+[source,xml]
+----
+<http>
+	...
+	<logout/>
+</http>
+----
+
+You will need to migrate by explicitly configuring the logout-success-url attribute when migrating to Spring Security 4.x:
+
+NOTE: If the logout-success-url attribute is already explicitly provided the application will not be impacted and no action is required.
+
+.Migration to Spring Security 4 Configuration
+[source,xml]
+----
+<http>
+		...
+		<logout logout-success-url="/"/> <!--1-->
+		/>
+</http>
+----
+
+<1> If the configuration does not specify the logout-success-url attribute, then it should be explicitly stated
 
 **Alternatively**, the application can be updated to use the new defaults.
 
