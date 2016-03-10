@@ -2,13 +2,13 @@ package sample.web;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.web.util.AntPathRequestMatcher;
-import org.springframework.security.web.util.AnyRequestMatcher;
-import org.springframework.security.web.util.ELRequestMatcher;
-import org.springframework.security.web.util.IpAddressMatcher;
-import org.springframework.security.web.util.RegexRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
-import org.springframework.security.web.util.RequestMatcherEditor;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.web.util.matcher.ELRequestMatcher;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcherEditor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,7 +33,7 @@ public class RequestMatcherTests {
 
 	@Test
 	public void any() {
-		AnyRequestMatcher matcher = new AnyRequestMatcher();
+		RequestMatcher matcher = AnyRequestMatcher.INSTANCE;
 	}
 
 	@Test

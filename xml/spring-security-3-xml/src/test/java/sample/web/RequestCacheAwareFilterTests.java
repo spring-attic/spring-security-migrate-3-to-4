@@ -23,7 +23,6 @@ public class RequestCacheAwareFilterTests {
 
 	@Test
 	public void deprecated() {
-		RequestCacheAwareFilter filter = new RequestCacheAwareFilter();
-		filter.setRequestCache(requestCache);
+		RequestCacheAwareFilter filter = new RequestCacheAwareFilter(requestCache);
 	}
 }

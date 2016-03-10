@@ -44,6 +44,7 @@ public class RolePrefixTests {
 		setup("USER");
 
 		request = new MockHttpServletRequest();
+		request.setMethod("GET");
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
 	}

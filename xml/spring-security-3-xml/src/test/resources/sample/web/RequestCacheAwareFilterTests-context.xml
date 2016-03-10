@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter">
-		<b:property name="requestCache" ref="requestCache"/>
+		<b:constructor-arg ref="requestCache"/>
 	</b:bean>
 
 	<b:bean id="requestCache" class="org.springframework.security.web.savedrequest.NullRequestCache"/>

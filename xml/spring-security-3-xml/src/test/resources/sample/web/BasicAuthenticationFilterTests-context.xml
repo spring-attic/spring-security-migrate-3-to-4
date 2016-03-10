@@ -6,8 +6,8 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<b:property name="authenticationManager" ref="authenticationManager"/>
-		<b:property name="authenticationEntryPoint" ref="entryPoint"/>
+		<b:constructor-arg ref="authenticationManager"/>
+		<b:constructor-arg ref="entryPoint"/>
 	</b:bean>
 
 	<b:bean id="entryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">

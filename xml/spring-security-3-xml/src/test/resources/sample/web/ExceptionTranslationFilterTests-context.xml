@@ -6,8 +6,8 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.access.ExceptionTranslationFilter">
-		<b:property name="authenticationEntryPoint" ref="entryPoint"/>
-		<b:property name="requestCache" ref="requestCache"/>
+		<b:constructor-arg ref="entryPoint"/>
+		<b:constructor-arg ref="requestCache"/>
 	</b:bean>
 
 	<b:bean id="entryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>

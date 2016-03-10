@@ -6,7 +6,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.session.ConcurrentSessionFilter">
-		<b:property name="sessionRegistry" ref="sessionRegistry"/>
+		<b:constructor-arg ref="sessionRegistry"/>
 	</b:bean>
 
 	<b:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>

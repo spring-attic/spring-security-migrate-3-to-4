@@ -6,13 +6,12 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<b:bean class="org.springframework.security.web.FilterChainProxy">
-		<b:property name="filterChainMap">
-			<b:map>
-				<b:entry key="#{T(org.springframework.security.web.util.matcher.AnyRequestMatcher).INSTANCE}">
-					<b:ref bean="mockFilter"/>
-				</b:entry>
-			</b:map>
-		</b:property>
+		<b:constructor-arg>
+			<b:bean class="org.springframework.security.web.DefaultSecurityFilterChain">
+				<b:constructor-arg value="#{T(org.springframework.security.web.util.matcher.AnyRequestMatcher).INSTANCE}"/>
+				<b:constructor-arg ref="mockFilter"/>
+			</b:bean>
+		</b:constructor-arg>
 	</b:bean>
 
 	<b:bean id="mockFilter" class="org.mockito.Mockito" factory-method="mock">

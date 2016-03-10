@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.expression.WebSecurityExpressionHandler;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class WebSecurityExpressionHandlerTests {
 
 	@Autowired
-	WebSecurityExpressionHandler handler;
+	SecurityExpressionHandler<FilterInvocation> handler;
 
 	@Autowired
 	ApplicationContext context;
@@ -27,12 +27,7 @@ public class WebSecurityExpressionHandlerTests {
 	@Test
 	public void configLoads() {}
 
-	@Test
-	public void contextLookup() {
-		WebSecurityExpressionHandler handler = context.getBean(WebSecurityExpressionHandler.class);
-	}
-
-	static class CustomWebSecurityExpressionHandler implements WebSecurityExpressionHandler {
+	static class CustomWebSecurityExpressionHandler implements SecurityExpressionHandler<FilterInvocation> {
 
 		@Override
 		public ExpressionParser getExpressionParser() {

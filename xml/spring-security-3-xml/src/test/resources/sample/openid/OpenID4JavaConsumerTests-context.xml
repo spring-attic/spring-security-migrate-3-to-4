@@ -6,12 +6,20 @@
 
 	<b:bean class="org.springframework.security.openid.OpenID4JavaConsumer">
 		<b:constructor-arg>
-			<b:list>
-				<b:bean class="org.springframework.security.openid.OpenIDAttribute">
-					<b:constructor-arg value="email"/>
-					<b:constructor-arg value="http://axschema.org/contact/email"/>
-				</b:bean>
-			</b:list>
+			<b:bean class="org.springframework.security.openid.RegexBasedAxFetchListFactory">
+				<b:constructor-arg>
+					<b:map>
+						<b:entry key=".*">
+							<b:list>
+								<b:bean class="org.springframework.security.openid.OpenIDAttribute">
+									<b:constructor-arg value="email"/>
+									<b:constructor-arg value="http://axschema.org/contact/email"/>
+								</b:bean>
+							</b:list>
+						</b:entry>
+					</b:map>
+				</b:constructor-arg>
+			</b:bean>
 		</b:constructor-arg>
 	</b:bean>
 </b:beans>

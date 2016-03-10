@@ -9,9 +9,10 @@ description = """sample"""
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-ext.springSecurityVersion = '3.2.7.RELEASE'
+ext.springSecurityVersion = '4.0.2.CI-SNAPSHOT'
 
 repositories {
+	maven { url 'https://repo.spring.io/libs-snapshot' }
 	mavenCentral()
 }
 
@@ -39,6 +40,7 @@ dependencies {
 	testCompile "net.sf.ehcache:ehcache:2.9.0"
 	testCompile "javax.annotation:jsr250-api:1.0"
 	testCompile "junit:junit:4.10"
+	testCompile "org.springframework:spring-test:$springVersion"
 	providedCompile "javax.servlet:javax.servlet-api:3.0.1"
 	providedCompile "javax.servlet.jsp:jsp-api:2.1"
 }

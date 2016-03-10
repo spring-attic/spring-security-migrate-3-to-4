@@ -17,36 +17,36 @@ public class AuthenticationExceptionTests {
 
 	@Test
 	public void accountStatusSubclass() {
-		new AccountStatusException(message, userDetails) {};
+		new AccountStatusException(message) {};
 	}
 
 	@Test
 	public void accountExpired() {
-		new AccountExpiredException(message, userDetails);
+		new AccountExpiredException(message);
 	}
 
 	@Test
 	public void badCredentials() {
-		new BadCredentialsException(message, userDetails);
+		new BadCredentialsException(message);
 	}
 
 	@Test
 	public void credentialsExpired() {
-		new CredentialsExpiredException(message, userDetails);
+		new CredentialsExpiredException(message);
 	}
 
 	@Test
 	public void disabled() {
-		new DisabledException(message, userDetails);
+		new DisabledException(message);
 	}
 
 	@Test
 	public void locked() {
-		new LockedException(message, userDetails);
+		new LockedException(message);
 	}
 
 	@Test
 	public void usernameNotFound() {
-		new UsernameNotFoundException(message, userDetails);
+		new UsernameNotFoundException(message);
 	}
 }

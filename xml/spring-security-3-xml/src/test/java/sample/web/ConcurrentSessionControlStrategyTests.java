@@ -1,11 +1,17 @@
 package sample.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,7 +32,11 @@ public class ConcurrentSessionControlStrategyTests {
 
 	@Test
 	public void deprecated() {
-		ConcurrentSessionControlStrategy strategy = new ConcurrentSessionControlStrategy(sessionRegistry);
+		List<SessionAuthenticationStrategy> delegates = new ArrayList<SessionAuthenticationStrategy>();
+		delegates.add(new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry));
+		delegates.add(new SessionFixationProtectionStrategy());
+		delegates.add(new RegisterSessionAuthenticationStrategy(sessionRegistry));
+		CompositeSessionAuthenticationStrategy strategy = new CompositeSessionAuthenticationStrategy(delegates);
 	}
 
 }
