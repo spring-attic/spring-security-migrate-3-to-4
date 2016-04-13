@@ -521,8 +521,8 @@ can be replaced with:
 [[m3to4-deprecations-web]]
 === spring-security-web
 
-This section describes all of the deprecated APIs within the spring-security-taglibs module.
-If you are not using the spring-security-taglibs module or have already completed this task, you can safely skip to <<m3to4-xmlnamespace-defaults>>.
+This section describes all of the deprecated APIs within the spring-security-web module.
+If you are not using the spring-security-web module or have already completed this task, you can safely skip to <<m3to4-xmlnamespace-defaults>>.
 
 [[m3to4-deprecations-web-fcp]]
 ==== FilterChainProxy
@@ -962,6 +962,40 @@ then it must be updated to:
 ----
 public class CustomWebSecurityExpressionHandler implements SecurityExpressionHandler<FilterInvocation> {
 	...
+}
+----
+
+[[m3to4-deprecations-web-authp]]
+==== @AuthenticationPrincipal
+
+`org.springframework.security.web.bind.annotation.AuthenticationPrincipal` has been deprecated in favor of `org.springframework.security.core.annotation.AuthenticationPrincipal`.
+For example:
+
+[source,java]
+----
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
+
+// ...
+
+@RequestMapping("/messages/inbox")
+public ModelAndView findMessagesForUser(@AuthenticationPrincipal CustomUser customUser) {
+
+	// .. find messags for this user and return them ...
+}
+----
+
+should be replaced with
+
+[source,java]
+----
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+// ...
+
+@RequestMapping("/messages/inbox")
+public ModelAndView findMessagesForUser(@AuthenticationPrincipal CustomUser customUser) {
+
+	// .. find messags for this user and return them ...
 }
 ----
 
