@@ -1604,14 +1604,22 @@ and
 
 [source,xml]
 ----
-<b:bean class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver" />
+<mvc:annotation-driven>
+    <mvc:argument-resolvers>
+        <b:bean class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver" />
+    </mvc:argument-resolvers>
+</mvc:annotation-driven>
 ----
 
 should be replaced with
 
 [source,xml]
 ----
-<b:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+<mvc:annotation-driven>
+    <mvc:argument-resolvers>
+        <b:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+    </mvc:argument-resolvers>
+</mvc:annotation-driven>
 ----
 
 
