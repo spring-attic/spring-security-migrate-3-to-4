@@ -29,8 +29,7 @@ public class RequestCacheAwareFilterTests {
 
 		@Bean
 		public RequestCacheAwareFilter rememberMeAuthenticationFilter(RequestCache requestCache) {
-			RequestCacheAwareFilter filter = new RequestCacheAwareFilter();
-			filter.setRequestCache(requestCache);
+			RequestCacheAwareFilter filter = new RequestCacheAwareFilter(requestCache);
 			return filter;
 		}
 

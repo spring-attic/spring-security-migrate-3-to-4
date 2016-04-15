@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
@@ -80,7 +79,6 @@ public class AuthenticationPrincipalTests {
 
 	@Configuration
 	@EnableWebMvc
-	@EnableWebMvcSecurity
 	@EnableWebSecurity
 	static class Config extends WebSecurityConfigurerAdapter {
 

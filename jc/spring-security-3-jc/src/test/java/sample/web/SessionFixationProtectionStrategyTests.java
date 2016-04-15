@@ -44,13 +44,30 @@ public class SessionFixationProtectionStrategyTests {
 		request.getSession().setAttribute(REMOVED_ATTR, "0");
 
 		List<String> attrsToRetain = Arrays.asList(SAVED_ATTR);
-		SessionFixationProtectionStrategy strategy = new SessionFixationProtectionStrategy();
-		strategy.setRetainedAttributes(attrsToRetain);
-		strategy.setMigrateSessionAttributes(false);
+		SessionFixationProtectionStrategy strategy = new AttrsSessionFixationProtectionStrategy(attrsToRetain);
 
 		strategy.onAuthentication(user, request, response);
 
 		assertThat(request.getSession().getAttribute(SAVED_ATTR)).isNotNull();
 		assertThat(request.getSession().getAttribute(REMOVED_ATTR)).isNull();
+	}
+
+	static class AttrsSessionFixationProtectionStrategy extends SessionFixationProtectionStrategy {
+		private final Collection<String> attrsToRetain;
+
+		public AttrsSessionFixationProtectionStrategy(
+				Collection<String> attrsToRetain) {
+			this.attrsToRetain = attrsToRetain;
+		}
+
+		@Override
+		protected Map<String, Object> extractAttributes(HttpSession session) {
+			Map<String,Object> attrs = new HashMap<String, Object>();
+			for(String attr : attrsToRetain) {
+				attrs.put(attr, session.getAttribute(attr));
+			}
+			return attrs;
+		}
+
 	}
 }

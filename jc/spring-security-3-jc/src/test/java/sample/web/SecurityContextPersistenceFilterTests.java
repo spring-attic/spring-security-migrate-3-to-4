@@ -23,8 +23,7 @@ public class SecurityContextPersistenceFilterTests {
 	static class Config {
 		@Bean
 		public SecurityContextPersistenceFilter securityContextPersistenceFilter(SecurityContextRepository securityContextRepository) {
-			SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter();
-			filter.setSecurityContextRepository(securityContextRepository);
+			SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter(securityContextRepository);
 			return filter;
 		}
 

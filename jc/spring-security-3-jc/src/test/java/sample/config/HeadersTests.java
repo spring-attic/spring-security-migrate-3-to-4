@@ -55,6 +55,7 @@ public class HeadersTests {
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.headers()
+					.defaultsDisabled()
 					.addHeaderWriter(new XFrameOptionsHeaderWriter(XFrameOptionsMode.SAMEORIGIN));
 		}
 

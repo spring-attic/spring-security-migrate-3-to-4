@@ -34,9 +34,7 @@ public class RememberMeAuthenticationFilterTests {
 
 		@Bean
 		public RememberMeAuthenticationFilter rememberMeAuthenticationFilter(AuthenticationManager authenticationManager, RememberMeServices rememberMeServices) {
-			RememberMeAuthenticationFilter filter = new RememberMeAuthenticationFilter();
-			filter.setAuthenticationManager(authenticationManager);
-			filter.setRememberMeServices(rememberMeServices);
+			RememberMeAuthenticationFilter filter = new RememberMeAuthenticationFilter(authenticationManager,rememberMeServices);
 			return filter;
 		}
 

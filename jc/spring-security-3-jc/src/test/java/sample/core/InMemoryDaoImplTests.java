@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.memory.InMemoryDaoImpl;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
 
@@ -22,7 +22,6 @@ public class InMemoryDaoImplTests {
 		Properties properties = new Properties();
 		properties.put("user", "password,ROLE_USER");
 
-		InMemoryDaoImpl uds = new InMemoryDaoImpl();
-		uds.setUserProperties(properties);
+		InMemoryUserDetailsManager uds = new InMemoryUserDetailsManager(properties);
 	}
 }

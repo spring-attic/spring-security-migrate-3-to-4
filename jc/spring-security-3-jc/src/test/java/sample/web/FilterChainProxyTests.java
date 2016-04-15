@@ -4,9 +4,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -23,9 +20,10 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FilterChainProxyTests {
@@ -45,11 +43,9 @@ public class FilterChainProxyTests {
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
 
-		Map<RequestMatcher,List<Filter>> filterChainMap = new HashMap<RequestMatcher, List<Filter>>();
-		filterChainMap.put(AnyRequestMatcher.INSTANCE, Arrays.asList(mockFilter));
+		SecurityFilterChain filterChain = new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, Arrays.asList(mockFilter));
 
-		securityFilterChain = new FilterChainProxy();
-		securityFilterChain.setFilterChainMap(filterChainMap);
+		securityFilterChain = new FilterChainProxy(filterChain);
 	}
 
 	@After

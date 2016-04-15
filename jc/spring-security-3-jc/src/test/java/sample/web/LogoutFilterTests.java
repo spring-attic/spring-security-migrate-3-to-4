@@ -45,7 +45,7 @@ public class LogoutFilterTests {
 
 	@Test
 	public void logoutUrl() throws Exception {
-		request.setRequestURI("/j_spring_security_logout");
+		request.setServletPath("/j_spring_security_logout");
 
 		filter.doFilter(request, response, chain);
 
@@ -58,6 +58,7 @@ public class LogoutFilterTests {
 		@Bean
 		public LogoutFilter logoutFilter() {
 			LogoutFilter filter = new LogoutFilter("/logout/success", new SecurityContextLogoutHandler());
+			filter.setFilterProcessesUrl("/j_spring_security_logout");
 			return filter;
 		}
 	}

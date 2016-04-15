@@ -9,7 +9,6 @@ public class LoginUrlAuthenticationEntryPointTests {
 
 	@Test
 	public void deprecatedProperties() {
-		LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint();
-		entryPoint.setLoginFormUrl("/login");
+		LoginUrlAuthenticationEntryPoint entryPoint = new LoginUrlAuthenticationEntryPoint("/login");
 	}
 }

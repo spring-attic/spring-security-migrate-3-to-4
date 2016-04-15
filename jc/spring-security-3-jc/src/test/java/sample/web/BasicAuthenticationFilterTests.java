@@ -18,11 +18,10 @@ public class BasicAuthenticationFilterTests {
 
 	final boolean ignoreFailure = false;
 
+
 	@Test
 	public void deprecated() {
-		BasicAuthenticationFilter filter = new BasicAuthenticationFilter();
-		filter.setAuthenticationManager(authenticationManager);
-		filter.setAuthenticationEntryPoint(entryPoint);
-		filter.setIgnoreFailure(ignoreFailure);
+		BasicAuthenticationFilter filter =
+				new BasicAuthenticationFilter(authenticationManager,entryPoint);
 	}
 }

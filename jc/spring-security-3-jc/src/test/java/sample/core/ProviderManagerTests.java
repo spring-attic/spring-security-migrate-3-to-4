@@ -28,11 +28,7 @@ public class ProviderManagerTests {
 	static class Config {
 		@Bean
 		public AuthenticationManager authenticationManager(ProviderManager parent, List<AuthenticationProvider> providers) {
-			ProviderManager provider = new ProviderManager();
-			provider.setParent(parent);
-			provider.setProviders(providers);
-			provider.setClearExtraInformation(true);
-			return provider;
+			return new ProviderManager(providers,parent);
 		}
 
 		@Bean

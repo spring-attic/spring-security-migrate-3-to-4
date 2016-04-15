@@ -40,9 +40,10 @@ public class CasAuthenticationFilterDefaultUrlsTests {
 
 	@Test
 	public void filterProcessUrl() throws Exception {
-		request.setRequestURI("/j_spring_cas_security_check");
+		request.setServletPath("/j_spring_cas_security_check");
 
 		CasAuthenticationFilter filter = new CasAuthenticationFilter();
+		filter.setFilterProcessesUrl("/j_spring_cas_security_check");
 		filter.setAuthenticationManager(authenticationManager);
 		filter.afterPropertiesSet();
 
