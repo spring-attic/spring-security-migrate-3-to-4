@@ -11,7 +11,7 @@ If you are looking to migrate from Spring Security 3.x to Spring Security 4.x wh
 
 As exploits against applications evolve, so must Spring Security.
 As a major release version, the Spring Security team took the opportunity to make some non-passive changes which focus on:
-
+lo
 * Ensuring Spring Security is more https://www.owasp.org/index.php/Establish_secure_defaults[secure by default]
 * Minimizing https://www.owasp.org/index.php/Information_Leakage[Information Leakage]
 * Removing deprecated APIs
@@ -847,8 +847,8 @@ can be replaced with:
 [[m3to4-deprecations-web]]
 === spring-security-web
 
-This section describes all of the deprecated APIs within the spring-security-taglibs module.
-If you are not using the spring-security-taglibs module or have already completed this task, you can safely skip to <<m3to4-xml
+This section describes all of the deprecated APIs within the spring-security-web module.
+If you are not using the spring-security-web module or have already completed this task, you can safely skip to <<m3to4-xml
 -defaults>>.
 
 [[m3to4-deprecations-web-fcp]]
@@ -1566,6 +1566,63 @@ public class CustomWebSecurityExpressionHandler implements SecurityExpressionHan
 }
 ----
 
+[[m3to4-deprecations-web-authp]]
+==== @AuthenticationPrincipal
+
+`org.springframework.security.web.bind.annotation.AuthenticationPrincipal` has been deprecated in favor of `org.springframework.security.core.annotation.AuthenticationPrincipal`.
+For example:
+
+[source,java]
+----
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
+
+// ...
+
+@RequestMapping("/messages/inbox")
+public ModelAndView findMessagesForUser(@AuthenticationPrincipal CustomUser customUser) {
+
+	// .. find messags for this user and return them ...
+}
+----
+
+should be replaced with
+
+[source,java]
+----
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+// ...
+
+@RequestMapping("/messages/inbox")
+public ModelAndView findMessagesForUser(@AuthenticationPrincipal CustomUser customUser) {
+
+	// .. find messags for this user and return them ...
+}
+----
+
+and
+
+[source,xml]
+----
+<mvc:annotation-driven>
+    <mvc:argument-resolvers>
+        <b:bean class="org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver" />
+    </mvc:argument-resolvers>
+</mvc:annotation-driven>
+----
+
+should be replaced with
+
+[source,xml]
+----
+<mvc:annotation-driven>
+    <mvc:argument-resolvers>
+        <b:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+    </mvc:argument-resolvers>
+</mvc:annotation-driven>
+----
+
+
 [[m3to4-update-security]]
 == Update Spring Security
 
@@ -1822,6 +1879,38 @@ NOTE: If the logout-url attribute is already explicitly provided the application
 
 **Alternatively**, the application can be updated to use the new defaults.
 
+* The {spring-security-docs-url}nsa-logout-logout-success-url[logout@logout-success-url] attribute default value changed from "/" to the log in page + "?logout". For example, if the log in page is "/login", then the log out success page is "/login?logout".
+If an application explicitly provides the attribute, no action is required for the migration.
+
+These changes mean if you have the following configuration within your XML configuration when using Spring Security 3.2.x:
+
+.Spring Security 3.2.x Sample Configuration
+[source,xml]
+----
+<http>
+	...
+	<logout/>
+</http>
+----
+
+You will need to migrate by explicitly configuring the logout-success-url attribute when migrating to Spring Security 4.x:
+
+NOTE: If the logout-success-url attribute is already explicitly provided the application will not be impacted and no action is required.
+
+.Migration to Spring Security 4 Configuration
+[source,xml]
+----
+<http>
+		...
+		<logout logout-success-url="/"/> <!--1-->
+		/>
+</http>
+----
+
+<1> If the configuration does not specify the logout-success-url attribute, then it should be explicitly stated
+
+**Alternatively**, the application can be updated to use the new defaults.
+
 [[m3to4-xmlnamespace-openid-login]]
 === Migrating <openid-login>
 
@@ -1903,6 +1992,12 @@ For example:
 *Alternatively*, the application would enable Security HTTP Response Headers.
 In many instances, leaving the Security HTTP Response Headers enabled will not have a negative impact on an application.
 
+[NOTE]
+====
+http://docs.spring.io/spring-security/site/docs/current/reference/html/headers.html#headers-hsts[Strict Transport Security] will cause infinite redirects if anywhere within your domain forcefully redirects from HTTPS to HTTP for a subset of pages.
+If your domain forcfully redirects to HTTP when HTTPS is requested, you will need to ensure to remove the redirect (recommended) or disable Strict Transport Security.
+====
+
 Developers are encouraged to read <<headers,Security HTTP Response Headers>> for details on using this feature.
 
 [[m3to4-xmlnamespace-csrf]]
@@ -1943,7 +2038,7 @@ If the `<remember-me>` element is being used within an application, then some of
 Below are detailed description of the changes and how to migrate:
 
 * The {spring-security-docs-url}nsa-remember-me-remember-me-parameter[remember-me@remember-me-parameter] attribute default value changed from "_spring_security_remember_me" to "remember-me". If an application explicitly provides the attribute, no action is required for the migration.
-* The {spring-security-docs-url}nsa-remember-me-remember-me-cookie[remember-me@remember-me-cookie] attribute default value changed from "_spring_security_remember_me" to "SPRING_SECURITY_REMEMBER_ME_COOKIE". If an application explicitly provides the attribute, no action is required for the migration.
+* The {spring-security-docs-url}nsa-remember-me-remember-me-cookie[remember-me@remember-me-cookie] attribute default value changed from "SPRING_SECURITY_REMEMBER_ME_COOKIE" to "remember-me". If an application explicitly provides the attribute, no action is required for the migration.
 
 These changes mean if you have the following configuration within your XML configuration when using Spring Security 3.2.x:
 
@@ -1979,7 +2074,7 @@ For example, one might update their log in form to look like the following:
 .login.html
 [source,xml]
 ----
-<c:url var="loginUrl" value="/login"/> <!--2-->
+<c:url var="loginUrl" value="/login"/>
 <form action="${loginUrl}" method="post">
 	...
 

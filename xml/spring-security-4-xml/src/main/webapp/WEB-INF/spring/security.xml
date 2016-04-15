@@ -11,7 +11,7 @@
 		<intercept-url pattern="/login" access="permitAll"/>
 		<intercept-url pattern="/**" access="hasRole('USER')"/>
 		<form-login login-page="/login"/>
-		<logout logout-url="/j_spring_security_logout"/>
+		<logout logout-url="/j_spring_security_logout" logout-success-url="/"/>
 	</http>
 
 	<authentication-manager>

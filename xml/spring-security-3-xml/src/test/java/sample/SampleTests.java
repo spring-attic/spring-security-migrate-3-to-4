@@ -78,5 +78,6 @@ public class SampleTests {
 				.andReturn();
 
 		assertThat(result.getRequest().getSession().getId()).isNotEqualTo(session.getId());
+		assertThat(result.getResponse().getRedirectedUrl()).endsWith("/");
 	}
 }
