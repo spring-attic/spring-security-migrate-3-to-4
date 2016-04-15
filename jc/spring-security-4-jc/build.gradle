@@ -25,6 +25,7 @@ dependencies {
 	compile "org.springframework.security:spring-security-taglibs:$springSecurityVersion"
 	compile "org.springframework.security:spring-security-acl:$springSecurityVersion"
 	compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-test:$springSecurityVersion"
 	compile "org.aspectj:aspectjrt:1.6.9"
 	compile "org.slf4j:slf4j-api:1.7.10"
 	compile "ch.qos.logback:logback-core:1.1.2"
