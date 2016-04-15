@@ -15,4 +15,15 @@
 
 	<bean class="sample.AuthenticationPrincipalController" />
 
+	<security:http use-expressions="true">
+		<security:intercept-url pattern="/**" access="authenticated"/>
+		<security:form-login />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider ref="testingAuthenticationProvider" />
+	</security:authentication-manager>
+
+	<bean id="testingAuthenticationProvider" class="org.springframework.security.authentication.TestingAuthenticationProvider" />
+
 </beans>

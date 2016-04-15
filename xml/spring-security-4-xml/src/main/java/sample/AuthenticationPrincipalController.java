@@ -16,6 +16,7 @@
 package sample;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationPrincipalController {
 
 	@RequestMapping(value = "/principal", method = RequestMethod.GET)
-	public String principal(@AuthenticationPrincipal String principal) {
-		return principal;
+	public String principal(@AuthenticationPrincipal User principal) {
+		return principal.getUsername();
 	}
 
 }

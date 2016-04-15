@@ -15,18 +15,15 @@
  */
 package sample.web;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -36,6 +33,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import sample.mvc.AuthenticationPrincipalController;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,20 +58,12 @@ public class AuthenticationPrincipalTests {
 
 	@Before
 	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-		securityContext.setAuthentication(new TestingAuthenticationToken(DEFAULT_USER, "password"));
-		SecurityContextHolder.setContext(securityContext);
-	}
-
-	@After
-	public void cleanup() {
-		SecurityContextHolder.clearContext();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).apply(springSecurity()).build();
 	}
 
 	@Test
 	public void authenticationPrincipal() throws Exception {
-		this.mockMvc.perform(get("/principal"))
+		this.mockMvc.perform(get("/principal").with(user(DEFAULT_USER).password("password")))
 				.andExpect(status().isOk())
 				.andExpect(content().string(DEFAULT_USER));
 	}
@@ -82,9 +73,17 @@ public class AuthenticationPrincipalTests {
 	@EnableWebSecurity
 	static class Config extends WebSecurityConfigurerAdapter {
 
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http
+				.authorizeRequests()
+					.anyRequest().authenticated();
+		}
+
 		@Bean
 		public AuthenticationPrincipalController authenticationPrincipalController() {
 			return new AuthenticationPrincipalController();
 		}
+
 	}
 }
