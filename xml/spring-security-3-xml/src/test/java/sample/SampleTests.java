@@ -1,6 +1,5 @@
 package sample;
 
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,7 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/security.xml",
-		"file:src/main/webapp/WEB-INF/spring/mvc/servlet-context.xml"})
+"file:src/main/webapp/WEB-INF/spring/mvc/servlet-context.xml"})
 @WebAppConfiguration
 public class SampleTests {
 	@Autowired

@@ -27,11 +27,11 @@ public class ServiceAuthenticationDetailsSourceTests {
 
 	@Test
 	public void constructor() {
-		new ServiceAuthenticationDetailsSource();
+		new ServiceAuthenticationDetailsSource(serviceProperties);
 	}
 
 	@Test
 	public void constructorString() {
-		new ServiceAuthenticationDetailsSource(artifactId);
+		new ServiceAuthenticationDetailsSource(serviceProperties, artifactId);
 	}
 }

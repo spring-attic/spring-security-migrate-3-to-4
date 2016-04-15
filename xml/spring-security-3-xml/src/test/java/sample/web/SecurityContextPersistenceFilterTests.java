@@ -21,8 +21,7 @@ public class SecurityContextPersistenceFilterTests {
 
 	@Test
 	public void deprecated() {
-		SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter();
-		filter.setSecurityContextRepository(securityContextRepository);
+		SecurityContextPersistenceFilter filter = new SecurityContextPersistenceFilter(securityContextRepository);
 	}
 
 }

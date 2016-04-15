@@ -29,13 +29,14 @@ public class CasAuthenticationFilterDefaultUrlsTests {
 	@Before
 	public void setup() {
 		request = new MockHttpServletRequest();
+		request.setMethod("GET");
 		response = new MockHttpServletResponse();
 		chain = new MockFilterChain();
 	}
 
 	@Test
 	public void filterProcessUrl() throws Exception {
-		request.setRequestURI("/j_spring_cas_security_check");
+		request.setServletPath("/j_spring_cas_security_check");
 
 		filter.doFilter(request, response, chain);
 

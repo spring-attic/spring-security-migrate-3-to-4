@@ -9,5 +9,6 @@
 		<b:constructor-arg>
 			<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
 		</b:constructor-arg>
+		<b:property name="filterProcessesUrl" value="/j_spring_security_logout"/>
 	</b:bean>
 </b:beans>

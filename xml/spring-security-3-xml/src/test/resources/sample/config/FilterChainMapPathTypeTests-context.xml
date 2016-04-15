@@ -5,7 +5,7 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<b:bean class="org.springframework.security.web.FilterChainProxy">
-		<filter-chain-map path-type="regex">
+		<filter-chain-map request-matcher="regex">
 			<filter-chain pattern=".*" filters="mockFilter"/>
 		</filter-chain-map>
 	</b:bean>

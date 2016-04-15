@@ -5,6 +5,6 @@
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<b:bean class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
-		<b:property name="key" value="key"/>
+		<b:constructor-arg value="key"/>
 	</b:bean>
 </b:beans>

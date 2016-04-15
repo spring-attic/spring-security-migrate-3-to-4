@@ -4,7 +4,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -22,6 +21,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -61,10 +61,10 @@ public class FilterChainMapPathTypeTests {
 
 	@Test
 	public void get() {
-		Map<RequestMatcher,List<Filter>> mappings = securityFilterChain.getFilterChainMap();
-		for(Map.Entry<RequestMatcher, List<Filter>> entry : mappings.entrySet()) {
-			RequestMatcher matcher = entry.getKey();
-			List<Filter> filters = entry.getValue();
+		List<SecurityFilterChain> mappings = securityFilterChain.getFilterChains();
+		for(SecurityFilterChain entry : mappings) {
+			boolean matches = entry.matches(request);
+			List<Filter> filters = entry.getFilters();
 		}
 	}
 }
