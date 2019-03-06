@@ -14,7 +14,7 @@ asciidoctor {
             doctype: 'book',
             numbered: '',
 
-            'spring-security-docs-url' : 'http://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#',
+            'spring-security-docs-url' : 'https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#',
             'spring-security-migration-github-url' : 'https://github.com/spring-projects/spring-security-migrate-3-to-4/'
     }
 
