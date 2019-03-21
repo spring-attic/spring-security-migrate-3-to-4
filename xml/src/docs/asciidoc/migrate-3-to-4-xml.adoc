@@ -774,7 +774,7 @@ and
 		<b:list>
 			<b:bean class="org.springframework.security.openid.OpenIDAttribute">
 				<b:constructor-arg value="email"/>
-				<b:constructor-arg value="http://axschema.org/contact/email"/>
+				<b:constructor-arg value="https://axschema.org/contact/email"/>
 			</b:bean>
 		</b:list>
 	</b:constructor-arg>
@@ -794,7 +794,7 @@ should be replaced with:
 						<b:list>
 							<b:bean class="org.springframework.security.openid.OpenIDAttribute">
 								<b:constructor-arg value="email"/>
-								<b:constructor-arg value="http://axschema.org/contact/email"/>
+								<b:constructor-arg value="https://axschema.org/contact/email"/>
 							</b:bean>
 						</b:list>
 					</b:entry>
@@ -1994,7 +1994,7 @@ In many instances, leaving the Security HTTP Response Headers enabled will not h
 
 [NOTE]
 ====
-http://docs.spring.io/spring-security/site/docs/current/reference/html/headers.html#headers-hsts[Strict Transport Security] will cause infinite redirects if anywhere within your domain forcefully redirects from HTTPS to HTTP for a subset of pages.
+https://docs.spring.io/spring-security/site/docs/current/reference/html/headers.html#headers-hsts[Strict Transport Security] will cause infinite redirects if anywhere within your domain forcefully redirects from HTTPS to HTTP for a subset of pages.
 If your domain forcfully redirects to HTTP when HTTPS is requested, you will need to ensure to remove the redirect (recommended) or disable Strict Transport Security.
 ====
 

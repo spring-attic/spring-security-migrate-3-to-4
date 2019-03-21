@@ -18,7 +18,7 @@ public class OpenID4JavaConsumerTests {
 	@Before
 	public void setup() {
 		attributes = Arrays.asList(new OpenIDAttribute("email",
-				"http://axschema.org/contact/email"));
+				"https://axschema.org/contact/email"));
 	}
 
 	@Test
